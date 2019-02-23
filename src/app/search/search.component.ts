@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SearchService } from './search.service';
-import { HttpParams } from '@angular/common/http';
+import { SearchTypes } from '../enums/search-types';
 
 @Component({
   selector: 'app-search',
@@ -11,18 +11,40 @@ import { HttpParams } from '@angular/common/http';
 
 export class SearchComponent {
 
+    @Input() type: string;
+    @Output() searched = new EventEmitter();
     constructor(private searchService: SearchService){}
 
     searchText: string;
 
-    searchKeyUp(event: Event){
+    searchKeyUp(){
         if(this.searchText.length > 5){
+            switch(this.type) { 
+                case SearchTypes.Album: { 
+                    // Not Yet Implemented
+                    break; 
+                } 
+                case SearchTypes.Artist: { 
+                    // Not Yet Implemented
+                    break; 
+                } 
+                case SearchTypes.Playlist: { 
+                    // Not Yet Implemented
+                    break; 
+                    } 
+                case SearchTypes.Track: { 
 
-            let params = new HttpParams();
-            params = params.append('q', this.searchText);
-            params = params.append('type', 'track');
+                    let tracks = this.searchService.searchTracks(this.searchText);
+                    this.searched.emit(tracks);
 
-            this.searchService.query(params).subscribe(resp => {console.log(resp)});
+                    break; 
+                    } 
+                default: { 
+                    // Not Yet Implemented
+                    break; 
+                } 
+            }
         }
     }
 }
+

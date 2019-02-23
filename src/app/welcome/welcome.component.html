@@ -2,4 +2,5 @@ Authenticated.
 
 Welcome!
 
-<app-search></app-search>
+<app-search type='track' (searched)='searched($event)'></app-search>
+<app-search-results [searchResults]='searchResults'></app-search-results>
