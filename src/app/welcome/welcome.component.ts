@@ -17,6 +17,6 @@ export class WelcomeComponent {
   }
 
   startRadio(){
-    this.radioService.getCurrentSong();
+    this.radioService.connect();
   }
 }
