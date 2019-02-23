@@ -1,6 +1,5 @@
-import { Component, Input,OnChanges } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
-import { Track } from '../types/track';
+import { Component, Input } from '@angular/core';
+import { TrackComponent } from '../tracks/track.component';
 
 @Component({
   selector: 'app-search-results',

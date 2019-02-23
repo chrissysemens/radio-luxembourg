@@ -1,0 +1,18 @@
+<div class="track">
+    <div class="image">
+        <img src="{{ track.imageUrl.url }}">
+    </div>
+    <div class="artists">
+            <ul>
+                <li *ngFor='let artist of track.artist'>
+                    {{ artist.name }}
+                </li>
+            </ul>
+        </div>
+    <div class="name">
+        {{ track.name }}
+    </div>
+    <div class="action">
+        <button (click)="clicked(track)">Add</button>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+.track,
+.name,
+.artists,
+.action{
+    display: inline-block;
+}
+
+.artists{
+    li{
+        display: inline-block;
+        text-decoration: none;
+    }
+}
+
+.action{
+    button{
+        background-color: red;
+        color: white;
+        min-width: 100px;
+    }
+}
