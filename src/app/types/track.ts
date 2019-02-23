@@ -1,5 +1,5 @@
 export class Track {
-    id: string;
+    id: string
     name: string
     artist: Array<string>
     imageUrl: string

@@ -21,26 +21,30 @@ export class SearchComponent {
         if(this.searchText.length > 5){
             switch(this.type) { 
                 case SearchTypes.Album: { 
-                    // Not Yet Implemented
+
+                    let albums = this.searchService.searchAlbums(this.searchText);
+                    this.searched.emit(albums);
                     break; 
                 } 
                 case SearchTypes.Artist: { 
-                    // Not Yet Implemented
+
+                    let artists = this.searchService.searchArtists(this.searchText);
+                    this.searched.emit(artists);
                     break; 
                 } 
                 case SearchTypes.Playlist: { 
-                    // Not Yet Implemented
-                    break; 
-                    } 
-                case SearchTypes.Track: { 
 
+                    let playlists = this.searchService.searchPlaylists(this.searchText);
+                    this.searched.emit(playlists);
+                    break; 
+                } 
+                case SearchTypes.Track: { 
+                    
                     let tracks = this.searchService.searchTracks(this.searchText);
                     this.searched.emit(tracks);
-
                     break; 
                     } 
                 default: { 
-                    // Not Yet Implemented
                     break; 
                 } 
             }

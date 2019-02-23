@@ -8,21 +8,10 @@ import { Track } from '../types/track';
 export class WelcomeComponent {
   title = 'We Are The Radio!';
 
-  searchResults: Array<Track>;
+  searchResults: Array<any>; //TODO: Implement generics
 
-  searched(results: Array<Track>){
+  searched(results: Array<any>){
     this.searchResults = results;
     console.log(this.searchResults);
   }
-
-  /*searchResults: Array<Track> = [{
-    id: '1',
-    name: 'test',
-    artist: ['sting', 'madonna']
-  },
-  {
-    id: '2',
-    name: 'test2',
-    artist: ['barry']
-  }];*/
 }

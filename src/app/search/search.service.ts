@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { DataService } from '../core/data.service';
 import { HttpParams } from '@angular/common/http';
 import { SearchTypes } from '../enums/search-types';
+import { Album } from '../types/album';
+import { Artist } from '../types/artist';
+import { Playlist  } from '../types/playlist';
 import { Track } from '../types/track';
 
 const baseUrl = 'https://api.spotify.com/v1';
@@ -20,18 +23,62 @@ export class SearchService extends DataService<any> {
         let params = new HttpParams();
         params = params.append('q', searchText);
         params = params.append('type', SearchTypes.Album);
+
+        let albums = new Array<Album>();
+
+        this.query(params)
+            .subscribe((data: any) => {     
+                data.albums.items.map((item: any) => {
+                    let album = new Album(item.id, 
+                                          item.name,
+                                          item.artists,
+                                          item.images[2],
+                                          item.tracks);
+                    albums.push(album);
+                });
+            });
+
+        return albums;
     }
 
     searchArtists(searchText: string){
         let params = new HttpParams();
         params = params.append('q', searchText);
         params = params.append('type', SearchTypes.Artist);
+
+        let artists = new Array<Artist>();
+        
+        this.query(params)
+            .subscribe((data: any) => {     
+                data.artists.items.map((item: any) => {
+                    let artist = new Artist(item.id, 
+                                          item.name);
+                    artists.push(artist);
+                });
+            });
+
+        return artists;
     }
 
     searchPlaylists(searchText: string){
         let params = new HttpParams();
         params = params.append('q', searchText);
         params = params.append('type', SearchTypes.Playlist);
+
+        let playlists = new Array<Playlist>();
+
+        this.query(params)
+            .subscribe((data: any) => {     
+                data.playlists.items.map((item: any) => {
+                    let playlist = new Playlist(item.id, 
+                                          item.name,
+                                          item.owner,
+                                          item.tracks);
+                    playlists.push(playlist);
+                });
+            });
+        
+        return playlists;
     }
 
     searchTracks(searchText: string){
