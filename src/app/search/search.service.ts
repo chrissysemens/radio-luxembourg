@@ -94,7 +94,9 @@ export class SearchService extends DataService<any> {
                     let track = new Track(item.id, 
                                           item.name, 
                                           item.artists, 
-                                          item.album.images[2]);
+                                          item.album.images[2],
+                                          item.uri,
+                                          item.duration_ms);
                     tracks.push(track);
                 });
             });

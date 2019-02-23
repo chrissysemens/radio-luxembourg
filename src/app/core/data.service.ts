@@ -31,4 +31,19 @@ export abstract class DataService<T> {
             .get(this.baseUrl + this.actionUrl, { headers: this.headers, params: params })
             .pipe(map(resp => resp as T[]));
     }
+
+    /**
+     * @example
+     * put()
+     *
+     * @returns result of PUT
+     */
+    put(body: Object){
+        console.log('in here');
+        return this.http
+            .put(this.baseUrl + this.actionUrl, body, { headers: this.headers })
+            .subscribe((response: any) => {
+                console.log(response);
+            })
+    }
 }

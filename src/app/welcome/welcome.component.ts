@@ -1,17 +1,22 @@
 import { Component } from '@angular/core';
-import { Track } from '../types/track';
+import { RadioService } from '../radio/radio.service';
 
 @Component({
   templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.scss']
+  styleUrls: ['./welcome.component.scss'],
+  providers: [RadioService]
 })
 export class WelcomeComponent {
   title = 'We Are The Radio!';
 
+  constructor(private radioService: RadioService) {}
   searchResults: Array<any>; //TODO: Implement generics
 
   searched(results: Array<any>){
     this.searchResults = results;
-    console.log(this.searchResults);
+  }
+
+  startRadio(){
+    this.radioService.getCurrentSong();
   }
 }
