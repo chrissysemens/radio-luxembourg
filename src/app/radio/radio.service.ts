@@ -26,7 +26,7 @@ export class RadioService extends DataService<any>{
         let trackStart = Date.now()
         const gap = 2000;
 
-        this.fs.collection('tracks').valueChanges()
+        const conn = this.fs.collection('tracks').valueChanges()
             .subscribe((tracks: any) => {
                 const lastTrack = tracks[tracks.length - 1];
 
@@ -35,6 +35,8 @@ export class RadioService extends DataService<any>{
                 }
             });
 
+        conn.unsubscribe();
+
         const request = new Request(track, trackStart);
 
         const obj = JSON.parse(JSON.stringify(request));
@@ -42,7 +44,13 @@ export class RadioService extends DataService<any>{
     }
 
     connect(){
-        this.fs.collection('tracks').valueChanges()
+        this.startRadio();
+        this.stayTuned();
+    }
+
+    startRadio(){
+        const conn = this.fs.collection('tracks')
+            .valueChanges()
             .subscribe((tracks: any) => {
 
                 const now = Date.now();
@@ -52,11 +60,23 @@ export class RadioService extends DataService<any>{
                         "uris": [tracks[0].uri],
                         "position_ms": now - tracks[0].track_start
                     }
-    
+
                     this.put(body);
                 } else {
                     // TODO: What if there's no songs?  
                 }
             });
+
+        conn.unsubscribe;
+    }
+    
+    stayTuned(){
+        const conn = this.fs.collection('tracks')
+        .valueChanges()
+        .subscribe((tracks: any) => {
+            console.log('something changed');
+        });
+
+    conn.unsubscribe;
     }
 }
