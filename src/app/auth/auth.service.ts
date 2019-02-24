@@ -63,8 +63,9 @@ export class AuthService extends DataService<any>{
 
         var result = this.http.get(this.refreshUrl, { params: params });
 
-        result.subscribe((access_token: string) => {
-            localStorage.setItem(this.tokenName, access_token);
+        result.subscribe((resp: any) => {
+            console.log(resp.access_token);
+            localStorage.setItem(this.tokenName, resp.access_token);
         });
     }
 
