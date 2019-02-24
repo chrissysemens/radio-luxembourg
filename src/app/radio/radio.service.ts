@@ -1,8 +1,8 @@
-import { Injectable, ɵConsole } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Request } from '../types/request';
 import { Track } from '../types/track';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { DataService } from '../core/data.service';
 
 const baseUrl = 'https://api.spotify.com/v1';
@@ -55,6 +55,7 @@ export class RadioService extends DataService<any>{
 
                 const now = Date.now();
 
+                /* Play the First Track */
                 if(tracks.length){
                     const body = {
                         "uris": [tracks[0].uri],
@@ -69,14 +70,16 @@ export class RadioService extends DataService<any>{
 
         conn.unsubscribe;
     }
-    
-    stayTuned(){
-        const conn = this.fs.collection('tracks')
-        .valueChanges()
-        .subscribe((tracks: any) => {
-            console.log('something changed');
-        });
 
-    conn.unsubscribe;
+    stayTuned(){    
+        this.fs.collection('tracks')
+            .stateChanges(['added'])
+            .subscribe(tracks => {
+
+                /* Add all listed tracks to the Queue */
+                tracks.forEach(track => {
+                    // console.log(track.payload.doc.data());
+                })
+            });
     }
 }

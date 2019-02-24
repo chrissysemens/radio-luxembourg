@@ -3,19 +3,20 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { ErrorCodes } from '../enums/error-codes';
 import { ErrorMessages } from '../enums/error-messages';
+import { AuthService } from '../auth/auth.service';
+import { TokenNames } from '../enums/token-names';
 
 import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpResponse,
   HttpErrorResponse,
 } from '@angular/common/http';
  
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
-    constructor() {}
+    constructor(private authService: AuthService) {}
  
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -27,7 +28,15 @@ export class RequestInterceptor implements HttpInterceptor {
             switch(error.status) { 
                 case  ErrorCodes.FourOhOne: { 
                     if(error.message === ErrorMessages.Expired){
-                        console.log('send refresh reques here');
+                        const refresh_token = localStorage.getItem(TokenNames.refresh);
+
+                        if(refresh_token){
+                            this.authService.refresh();
+                        } else {
+                            this.authService.authorize();
+                        }
+
+                        // Clone - Add new Headers and retry
                     }
                     break; 
                 } 

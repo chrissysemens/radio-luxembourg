@@ -1,5 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpRequest, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 /** The base Data Service. */
@@ -36,14 +35,25 @@ export abstract class DataService<T> {
      * @example
      * put()
      *
-     * @returns result of PUT
+     * @returns result of the PUT
      */
     put(body: Object){
-        console.log('in here');
         return this.http
-            .put(this.baseUrl + this.actionUrl, body, { headers: this.headers })
-            .subscribe((response: any) => {
-                console.log(response);
-            })
+            .put(this.baseUrl + this.actionUrl, body, { headers: this.headers });
+    }
+
+        /**
+     * @example
+     * post()
+     *
+     * @returns result of the POST
+     */
+    post(body: Object){
+        return this.http
+            .post(this.baseUrl + this.actionUrl, body, { headers: this.headers });
+    }
+
+    retry(request: HttpRequest<any>){
+        const retry = request.clone();
     }
 }
