@@ -15,7 +15,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { RequestInterceptor } from './core/http.interceptor';
+import { ResponseInterceptor } from './core/http-response.interceptor';
 
 @NgModule({
   declarations: [
@@ -39,7 +39,7 @@ import { RequestInterceptor } from './core/http.interceptor';
     AngularFirestore,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: RequestInterceptor,
+      useClass: ResponseInterceptor,
       multi: true,
     },
   ],

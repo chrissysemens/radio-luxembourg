@@ -9,13 +9,14 @@ import { TokenNames } from '../enums/token-names';
 import {
   HttpRequest,
   HttpHandler,
+  HttpHeaders,
   HttpEvent,
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
  
 @Injectable()
-export class RequestInterceptor implements HttpInterceptor {
+export class ResponseInterceptor implements HttpInterceptor {
     constructor(private authService: AuthService) {}
  
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -28,15 +29,24 @@ export class RequestInterceptor implements HttpInterceptor {
             switch(error.status) { 
                 case  ErrorCodes.FourOhOne: { 
                     if(error.message === ErrorMessages.Expired){
+                        
                         const refresh_token = localStorage.getItem(TokenNames.refresh);
+                        let token = localStorage.getItem(TokenNames.refresh);
 
                         if(refresh_token){
-                            this.authService.refresh();
+                            token = this.authService.refresh();
                         } else {
-                            this.authService.authorize();
+                            token = this.authService.authorize();
                         }
 
-                        // Clone - Add new Headers and retry
+                        const refreshedRequest = request.clone({
+                          headers: new HttpHeaders({
+                            'Content-Type':  'application/json',
+                            'Authorization': 'Bearer ' + token
+                          })
+                        });
+              
+                        return next.handle(refreshedRequest);
                     }
                     break; 
                 } 
