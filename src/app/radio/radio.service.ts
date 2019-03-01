@@ -10,15 +10,12 @@ const routes = {
     play: () => `/me/player/play`,
 };
 
-@Injectable({
-    providedIn: 'root'
-})
-
+@Injectable()
 export class RadioService extends DataService<any>{
     
     constructor(http: HttpClient, 
                 private fs: AngularFirestore) {
-                    super(http, baseUrl, routes.play());
+                    super(http, baseUrl);
                 }
 
     requestSong(track: Track){
@@ -62,7 +59,7 @@ export class RadioService extends DataService<any>{
                         "position_ms": now - tracks[0].track_start
                     }
 
-                    this.put(body).subscribe(resp => console.log(resp));
+                    this.put(routes.play(), body).subscribe(resp => console.log(resp));
                 } else {
                     // TODO: What if there's no songs?  
                 }

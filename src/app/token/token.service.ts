@@ -22,7 +22,7 @@ export class TokenService extends DataService<any>{
         @Inject(DOCUMENT) private document: any,
         private activatedRoute: ActivatedRoute,
         http: HttpClient){
-            super(http, baseUrl, routes.token());
+            super(http, baseUrl);
         }
 
     tokenName = TokenNames.auth;
@@ -78,5 +78,4 @@ export class TokenService extends DataService<any>{
 
         return token;
     }
-
 }

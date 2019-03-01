@@ -16,7 +16,7 @@ const routes = {
 @Injectable()
 export class SearchService extends DataService<any> {
     constructor(http: HttpClient) {
-        super(http, baseUrl, routes.search());
+        super(http, baseUrl);
     }
 
     searchAlbums(searchText: string){
@@ -26,7 +26,7 @@ export class SearchService extends DataService<any> {
 
         let albums = new Array<Album>();
 
-        this.query(params)
+        this.query(routes.search(), params)
             .subscribe((data: any) => {     
                 data.albums.items.map((item: any) => {
                     let album = new Album(item.id, 
@@ -48,7 +48,7 @@ export class SearchService extends DataService<any> {
 
         let artists = new Array<Artist>();
         
-        this.query(params)
+        this.query(routes.search(), params)
             .subscribe((data: any) => {     
                 data.artists.items.map((item: any) => {
                     let artist = new Artist(item.id, 
@@ -67,7 +67,7 @@ export class SearchService extends DataService<any> {
 
         let playlists = new Array<Playlist>();
 
-        this.query(params)
+        this.query(routes.search(), params)
             .subscribe((data: any) => {     
                 data.playlists.items.map((item: any) => {
                     let playlist = new Playlist(item.id, 
@@ -88,7 +88,7 @@ export class SearchService extends DataService<any> {
 
         let tracks = new Array<Track>();
         
-        this.query(params)
+        this.query(routes.search(), params)
             .subscribe((data: any) => {     
                 data.tracks.items.map((item: any) => {
                     let track = new Track(item.id, 

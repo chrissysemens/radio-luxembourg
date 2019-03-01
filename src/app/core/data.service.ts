@@ -5,12 +5,10 @@ import { map } from 'rxjs/operators';
 export abstract class DataService<T> {
 
     headers: HttpHeaders;
-    params: HttpParams;
 
     constructor(
         protected http: HttpClient, 
-        protected baseUrl: string, 
-        protected actionUrl: string) {
+        protected baseUrl: string) {
 
             const token = localStorage.getItem('spotify_token');
             this.headers = new HttpHeaders();
@@ -25,9 +23,11 @@ export abstract class DataService<T> {
      *
      * @returns A list of data of type<T>
      */
-    query(params: HttpParams){
+    query(actionUrl: string, params?: HttpParams){
+
+        params ? params : {};
         return this.http
-            .get(this.baseUrl + this.actionUrl, { headers: this.headers, params: params })
+            .get(this.baseUrl +  actionUrl, { headers: this.headers, params: params })
             .pipe(map(resp => resp as T[]));
     }
 
@@ -37,10 +37,10 @@ export abstract class DataService<T> {
      *
      * @returns result of the PUT
      */
-    put(body: Object){
-        console.log(this.baseUrl, this.actionUrl, body, this.headers);
+    put(actionUrl: string, body: Object){
+        console.log(this.baseUrl, actionUrl, body, this.headers);
         return this.http
-            .put(this.baseUrl + this.actionUrl, body, { headers: this.headers });
+            .put(this.baseUrl + actionUrl, body, { headers: this.headers });
     }
     
     /**
@@ -49,12 +49,8 @@ export abstract class DataService<T> {
      *
      * @returns result of the POST
      */
-    post(body: Object){
+    post(actionUrl: string, body: Object){
         return this.http
-            .post(this.baseUrl + this.actionUrl, body, { headers: this.headers });
-    }
-
-    retry(request: HttpRequest<any>){
-        const retry = request.clone();
+            .post(this.baseUrl + actionUrl, body, { headers: this.headers });
     }
 }
