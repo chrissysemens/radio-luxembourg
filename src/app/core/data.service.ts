@@ -38,11 +38,12 @@ export abstract class DataService<T> {
      * @returns result of the PUT
      */
     put(body: Object){
+        console.log(this.baseUrl, this.actionUrl, body, this.headers);
         return this.http
             .put(this.baseUrl + this.actionUrl, body, { headers: this.headers });
     }
-
-        /**
+    
+    /**
      * @example
      * post()
      *

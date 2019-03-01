@@ -1,6 +1,6 @@
-import { Injectable, ɵConsole } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
-import { AuthService } from '../auth/auth.service';
+import { TokenService } from '../token/token.service';
 
 import {
   HttpRequest,
@@ -13,11 +13,11 @@ import {
 
  
 @Injectable()
-export class ResponseInterceptor implements HttpInterceptor {
+export class RequestInterceptor implements HttpInterceptor {
 
     expiry_time: number; 
 
-    constructor(private authService: AuthService) {
+    constructor(private tokenService: TokenService) {
       this.expiry_time =  parseInt(localStorage.getItem('expiry_time'));
     }
  
@@ -25,16 +25,16 @@ export class ResponseInterceptor implements HttpInterceptor {
     
         const now = new Date().getTime();
 
-        if(now > this.expiry_time){
+        if(now < this.expiry_time){
           /* Token has expired */
-          const token = this.authService.refresh();
+          const token = this.tokenService.refresh();
 
           const refreshedRequest = request.clone({
             headers: new HttpHeaders({
               'Content-Type':  'application/json',
               'Authorization': 'Bearer ' + token
             })
-          });
+          })
 
           return next.handle(refreshedRequest);
         }

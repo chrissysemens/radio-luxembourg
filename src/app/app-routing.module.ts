@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';
+import { TokenComponent } from './token/token.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 const routes = [
-  { path: '', redirectTo: '/auth', pathMatch: 'full' },
-  { path: 'auth', component: AuthComponent },
+  { path: '', redirectTo: '/token', pathMatch: 'full' },
+  { path: 'token', component: TokenComponent },
   { path: 'welcome', component: WelcomeComponent}];
 
 @NgModule({

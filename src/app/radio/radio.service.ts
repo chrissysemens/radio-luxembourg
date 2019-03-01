@@ -52,17 +52,17 @@ export class RadioService extends DataService<any>{
         const conn = this.fs.collection('tracks')
             .valueChanges()
             .subscribe((tracks: any) => {
-
                 const now = Date.now();
 
                 /* Play the First Track */
                 if(tracks.length){
+                    console.log(tracks[0]);
                     const body = {
                         "uris": [tracks[0].uri],
                         "position_ms": now - tracks[0].track_start
                     }
 
-                    this.put(body);
+                    this.put(body).subscribe(resp => console.log(resp));
                 } else {
                     // TODO: What if there's no songs?  
                 }
@@ -78,7 +78,6 @@ export class RadioService extends DataService<any>{
 
                 /* Add all listed tracks to the Queue */
                 tracks.forEach(track => {
-                    // console.log(track.payload.doc.data());
                 })
             });
     }

@@ -6,7 +6,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthComponent } from './auth/auth.component';  
+import { TokenComponent } from './token/token.component';  
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SearchComponent } from './search/search.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
@@ -16,11 +16,12 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ResponseInterceptor } from './core/http-response.interceptor';
+import { RequestInterceptor } from './core/http-request.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent,
+    TokenComponent,
     WelcomeComponent,
     SearchComponent,
     SearchResultsComponent,
@@ -42,6 +43,11 @@ import { ResponseInterceptor } from './core/http-response.interceptor';
       useClass: ResponseInterceptor,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      multi: true,
+    }
   ],
   bootstrap: [AppComponent]
 })
