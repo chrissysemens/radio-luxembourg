@@ -44,6 +44,7 @@ testem.log
 Thumbs.db
 
 # Env variables
-api.config.ts
-/environments/api.config.ts
+src/environments/api.config.ts
+src/environments/firebase.config.ts
+
 
