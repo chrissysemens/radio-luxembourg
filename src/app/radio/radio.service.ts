@@ -53,7 +53,6 @@ export class RadioService extends DataService<any>{
 
                 /* Play the First Track */
                 if(tracks.length){
-                    console.log(tracks[0]);
                     const body = {
                         "uris": [tracks[0].uri],
                         "position_ms": now - tracks[0].track_start

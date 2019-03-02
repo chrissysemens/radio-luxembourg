@@ -38,7 +38,6 @@ export abstract class DataService<T> {
      * @returns result of the PUT
      */
     put(actionUrl: string, body: Object){
-        console.log(this.baseUrl, actionUrl, body, this.headers);
         return this.http
             .put(this.baseUrl + actionUrl, body, { headers: this.headers });
     }

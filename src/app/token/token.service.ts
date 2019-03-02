@@ -41,7 +41,6 @@ export class TokenService extends DataService<any>{
         if (!token){
             this.activatedRoute.queryParams.subscribe(params => {
 
-                console.log(params['expires_in']);
                 this.accessToken = params['access_token'];
                 this.refreshToken = params['refresh_token'];
                 this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
