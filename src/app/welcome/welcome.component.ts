@@ -38,9 +38,6 @@ export class WelcomeComponent implements OnInit {
           resp.type,
           resp.uri
         )
-        
-        console.log(profile);
-
       });
   }
 

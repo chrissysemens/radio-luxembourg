@@ -6,6 +6,7 @@ import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TokenConfig } from '../../environments/api.config';
 import { TokenNames } from '../enums/token-names';
+import { Expiries } from '../enums/expiries';
 
 const baseUrl = 'https://accounts.spotify.com/api';
 const routes = {
@@ -39,9 +40,10 @@ export class TokenService extends DataService<any>{
 
         if (!token){
             this.activatedRoute.queryParams.subscribe(params => {
+
                 this.accessToken = params['access_token'];
                 this.refreshToken = params['refresh_token'];
-                this.expiry_time = new Date().getTime() + parseInt(params['expires_in']);
+                this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
 
                 if(this.accessToken){
                     localStorage.setItem(this.tokenName, this.accessToken);
@@ -72,7 +74,7 @@ export class TokenService extends DataService<any>{
             token = resp.accessToken;
             localStorage.setItem(this.tokenName, resp.access_token);
 
-            this.expiry_time = new Date().getTime() + parseInt(resp.expires_in);
+            this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
             localStorage.setItem('expiry_time', this.expiry_time.toString());
         });
 
