@@ -9,8 +9,6 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-
-
  
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
@@ -25,7 +23,8 @@ export class RequestInterceptor implements HttpInterceptor {
     
         const now = new Date().getTime();
 
-        if(now < this.expiry_time){
+        if(now > this.expiry_time){
+
           /* Token has expired */
           const token = this.tokenService.refresh();
 

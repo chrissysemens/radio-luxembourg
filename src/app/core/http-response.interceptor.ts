@@ -35,10 +35,8 @@ export class ResponseInterceptor implements HttpInterceptor {
 
                         if(refresh_token){
                             token = this.tokenService.refresh();
-                        } else {
-                            token = this.tokenService.authorize();
-                        }
-
+                        } 
+                        
                         const refreshedRequest = request.clone({
                           headers: new HttpHeaders({
                             'Content-Type':  'application/json',
