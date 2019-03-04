@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { RadioService } from '../radio/radio.service';
 import { ProfileService } from '../profile/profile.service';
-import { Profile } from '../types/profile';
-
-const routes = {
-  me: () => `/v1/me`,
-};
+import { UserPlaylistService } from '../playlist/user-playlist.service';
 
 @Component({
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss'],
-  providers: [ProfileService, RadioService]
+  providers: [UserPlaylistService, ProfileService, RadioService]
 })
 
 export class WelcomeComponent implements OnInit {
@@ -20,29 +16,21 @@ export class WelcomeComponent implements OnInit {
 
   constructor(
     private radioService: RadioService,
+    private userPlaylistService: UserPlaylistService,
     private profileService: ProfileService) {};
 
   ngOnInit(){
-    this.profileService.query(routes.me())
-      .subscribe((resp: any) => {
-
-        const profile = new Profile(
-          resp.country,
-          resp.display_name,
-          resp.email,
-          resp.followers.total,
-          resp.profile_url,
-          resp.id,
-          resp.images[0].url,
-          resp.product,
-          resp.type,
-          resp.uri
-        )
-      });
+    this.profileService.getMyProfile().subscribe(resp => {
+      localStorage.setItem('user_id', resp.id);
+    })
   }
 
   searched(results: Array<any>){
     this.searchResults = results;
+  }
+
+  createPlaylist(){
+    this.userPlaylistService.createRadioPlaylist('RadioLux', true, false, 'You control the Jams');
   }
 
   startRadio(){
