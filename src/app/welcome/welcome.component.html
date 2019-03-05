@@ -5,5 +5,13 @@ Welcome!
 <app-search type='track' (searched)='searched($event)'></app-search>
 <app-search-results [searchResults]='searchResults'></app-search-results>
 
-<button (click)='startRadio()'>Start Radio</button>
-<button (click)='createPlaylist()'>Create Playlist</button>
+<p>Create session SHOULD:
+     <ul>
+         <li> create a fake channel</li>
+         <li> grab your userId from the profile end point</li>
+         <li> create a playlist in your spotify called radio lux</li>
+         <li> get the newly created playlist Id</li>
+         <li> create a session in the cloud, with the three Ids linked (channel / user / playlist) </li>
+     </ul>
+</p>
+<button (click)='createSession()'>Create Session</button>
