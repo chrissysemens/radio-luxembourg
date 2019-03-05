@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from '../core/data.service';
-import { CreatePlaylistRequest } from '../types/create-playlist-request';
+import { CreatePlaylistRequest } from '../requests/playlist-create';
 
 const userId = localStorage.getItem('user_id');
 const baseUrl = `https://api.spotify.com/v1/users/${userId}`;
@@ -16,17 +16,7 @@ export class UserPlaylistService extends DataService<any>{
         super(http, baseUrl);
     }
 
-    createRadioPlaylist(
-        name: string, 
-        isPublic: boolean, 
-        isCollaborative: boolean, 
-        description: string){
-        const req = new CreatePlaylistRequest(
-            name,
-            isPublic, 
-            isCollaborative,
-            description);
-
-        this.post(routes.create(), req).subscribe(resp => console.log(resp));
+    createRadioPlaylist(request: CreatePlaylistRequest){
+        return this.post(routes.create(), request);
     }
 }
