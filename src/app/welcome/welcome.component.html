@@ -5,7 +5,7 @@ Welcome!
 <app-search type='track' (searched)='searched($event)'></app-search>
 <app-search-results [searchResults]='searchResults'></app-search-results>
 
-<p>Create session SHOULD:
+<p>Create session SHOULD:</p>
      <ul>
          <li> create a fake channel</li>
          <li> grab your userId from the profile end point</li>
@@ -13,5 +13,4 @@ Welcome!
          <li> get the newly created playlist Id</li>
          <li> create a session in the cloud, with the three Ids linked (channel / user / playlist) </li>
      </ul>
-</p>
 <button (click)='createSession()'>Create Session</button>
