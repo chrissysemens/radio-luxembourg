@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from '../core/data.service';
 import { Profile } from '../types/profile';
-import { PathLocationStrategy } from '@angular/common';
-import { Observable } from 'rxjs';
 
 const baseUrl = 'https://api.spotify.com';
 
@@ -20,7 +18,7 @@ export class ProfileService extends DataService<any>{
         super(http, baseUrl);
     }
 
-    getMyProfile(): Observable<any>{
+    getMyProfile(){
         return this.query(routes.me());
     }
 }
