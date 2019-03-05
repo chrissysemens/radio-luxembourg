@@ -27,7 +27,12 @@ export class WelcomeComponent implements OnInit {
     private sessionService: SessionService,
     private userPlaylistService: UserPlaylistService) {};
 
-  ngOnInit(){}
+  ngOnInit(){
+    this.profileService.getMyProfile()
+      .subscribe((resp: any) => { 
+        localStorage.setItem('user_id', resp.id);
+    });
+  }
 
   createSession(){
     const channel = new Channel('123456', 'TopsOfTracks', 'fistfullofbees');
@@ -43,6 +48,7 @@ export class WelcomeComponent implements OnInit {
       this.playlistId = results[1].id;
 
       const session = new Session(this.userId, this.channelId, this.playlistId);
+      console.log(session);
       this.sessionService.createSession(session);
     });
   }
