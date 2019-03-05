@@ -27,9 +27,7 @@ export class WelcomeComponent implements OnInit {
     private sessionService: SessionService,
     private userPlaylistService: UserPlaylistService) {};
 
-  ngOnInit(){
-    this.createSession();
-  }
+  ngOnInit(){}
 
   createSession(){
     const channel = new Channel('123456', 'TopsOfTracks', 'fistfullofbees');
