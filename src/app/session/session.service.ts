@@ -7,7 +7,7 @@ export class SessionService{
     
     constructor(private fs: AngularFirestore) { }
 
-    createSession(userId: string, session: Session){
+    createSession(session: Session){
         const obj = JSON.parse(JSON.stringify(session));
         return this.fs.collection('sessions').add(obj);
     }

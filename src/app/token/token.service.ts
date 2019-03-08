@@ -74,7 +74,7 @@ export class TokenService extends DataService<any>{
             token = resp.accessToken;
             localStorage.setItem(this.tokenName, resp.access_token);
 
-            this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
+            this.expiry_time = Date.now() + (parseInt(Expiries.token) * 1000);
             localStorage.setItem('expiry_time', this.expiry_time.toString());
         });
 
