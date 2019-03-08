@@ -33,6 +33,20 @@ export abstract class DataService<T> {
 
     /**
      * @example
+     * getOne()
+     *
+     * @returns A list of data of type<T>
+     */
+    getOne(actionUrl: string, params?: HttpParams){
+
+        params ? params : {};
+        return this.http
+            .get(this.baseUrl +  actionUrl, { headers: this.headers, params: params })
+            .pipe(map(resp => resp as T));
+    }
+
+    /**
+     * @example
      * put()
      *
      * @returns result of the PUT

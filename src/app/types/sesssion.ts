@@ -1,13 +1,15 @@
+import { Profile } from '../types/profile';
+
 export class Session {
-    userId: string
+    user: Profile
     playlistId: string
     channelId: string
     start: number
 
-    constructor(userId: string, 
+    constructor(user: Profile, 
                 channelId: string, 
                 playlistId: string){
-        this.userId = userId;
+        this.user = user;
         this.playlistId = playlistId;
         this.channelId = channelId;
         this.start = new Date().getTime();

@@ -1,15 +1,16 @@
 import { Track } from './track';
+import { Profile } from './profile';
 
 export class Request {
-    uri: string
     request_time: Date
-    duration_ms: number
     track_start: number
+    track: Track
+    requestor: string
 
-    constructor(track: Track, track_start: number){
-        this.uri = track.uri;
-        this.duration_ms = track.duration_ms;
+    constructor(track: Track, track_start: number, profile: Profile){
+        this.track = track;
         this.request_time = new Date();
         this.track_start = track_start;
+        this.requestor = profile.display_name;
     }
 }

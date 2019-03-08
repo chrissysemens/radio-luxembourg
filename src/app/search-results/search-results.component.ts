@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { TrackComponent } from '../tracks/track.component';
 
 @Component({
   selector: 'app-search-results',

@@ -11,12 +11,14 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { SearchComponent } from './search/search.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { TrackComponent } from './tracks/track.component';
+import { QueueComponent } from './queue/queue.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ResponseInterceptor } from './core/http-response.interceptor';
 import { RequestInterceptor } from './core/http-request.interceptor';
+import { SessionService } from './session/session.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { RequestInterceptor } from './core/http-request.interceptor';
     WelcomeComponent,
     SearchComponent,
     SearchResultsComponent,
-    TrackComponent
+    TrackComponent,
+    QueueComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { RequestInterceptor } from './core/http-request.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
       multi: true,
-    }
+    },
+    SessionService
   ],
   bootstrap: [AppComponent]
 })

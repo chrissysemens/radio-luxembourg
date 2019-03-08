@@ -10,7 +10,7 @@ const routes = {
   };
 
 @Injectable()
-export class ProfileService extends DataService<any>{
+export class ProfileService extends DataService<Profile>{
     
     profile: Profile;
 
@@ -19,6 +19,6 @@ export class ProfileService extends DataService<any>{
     }
 
     getMyProfile(){
-        return this.query(routes.me());
+        return this.getOne(routes.me());
     }
 }

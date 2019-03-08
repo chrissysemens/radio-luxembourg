@@ -1,38 +1,35 @@
 import { Component, OnInit, ɵConsole } from '@angular/core';
-import { RadioService } from '../radio/radio.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserPlaylistService } from '../playlist/user-playlist.service';
 import { Channel } from '../types/channel';
 import { CreatePlaylistRequest } from '../requests/playlist-create';
-import { Session } from '../types/sesssion';
 import { SessionService } from '../session/session.service';
-import { forkJoin} from 'rxjs';
+import { QueueService } from '../queue/queue.service';
+import { Profile } from '../types/profile';
+import { Playlist } from '../types/playlist';
+import { Session } from '../types/sesssion';
+
 
 @Component({
   templateUrl: './welcome.component.html',
   styleUrls: ['./welcome.component.scss'],
-  providers: [ProfileService, RadioService, SessionService, UserPlaylistService]
+  providers: [ProfileService, QueueService, UserPlaylistService]
 })
 
 export class WelcomeComponent implements OnInit {
 
   searchResults: Array<any>;
-  userId: string;
   channelId: string;
   playlistId: string;
+  queue: any;
 
   constructor(
-    private radioService: RadioService,
+    private queueService: QueueService,
     private profileService: ProfileService,
     private sessionService: SessionService,
     private userPlaylistService: UserPlaylistService) {};
 
-  ngOnInit(){
-    this.profileService.getMyProfile()
-      .subscribe((resp: any) => { 
-        localStorage.setItem('user_id', resp.id);
-    });
-  }
+  ngOnInit(){}
 
   createSession(){
     const channel = new Channel('123456', 'TopsOfTracks', 'fistfullofbees');
@@ -40,23 +37,31 @@ export class WelcomeComponent implements OnInit {
 
     const playlistReq = new CreatePlaylistRequest('RadioLux', true, false, 'You control the jams');
 
-    let profile = this.profileService.getMyProfile();
-    let playlist = this.userPlaylistService.createRadioPlaylist(playlistReq);
+    this.profileService.getMyProfile()
+      .subscribe( 
+        (profile: Profile) => {
+          let user = profile;
 
-    forkJoin([profile, playlist]).subscribe((results: any) => {
-      this.userId = results[0].id;
-      this.playlistId = results[1].id;
+          this.userPlaylistService.createRadioPlaylist(user.id, playlistReq)
+            .subscribe(
+              (playlist: Playlist) => {
 
-      const session = new Session(this.userId, this.channelId, this.playlistId);
-      console.log(session);
-      this.sessionService.createSession(this.userId, session);
-    });
+              const session = new Session(user, this.channelId, playlist.id);
+              this.sessionService.createSession(session);
+          });
+      });
   }
+
   searched(results: Array<any>){
     this.searchResults = results;
   }
 
-  startRadio(){
-    this.radioService.connect();
+  stayTuned(){
+    const session = this.sessionService.getSession();
+    this.queueService.connect(session.channelId).valueChanges()
+      .subscribe((requests: Array<Request>) => {
+        console.log(requests);
+        this.queue = requests;
+      });
   }
 }
