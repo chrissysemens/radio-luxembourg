@@ -49,7 +49,7 @@ export class WelcomeComponent implements OnInit {
 
       const session = new Session(this.userId, this.channelId, this.playlistId);
       console.log(session);
-      this.sessionService.createSession(session);
+      this.sessionService.createSession(this.userId, session);
     });
   }
   searched(results: Array<any>){
