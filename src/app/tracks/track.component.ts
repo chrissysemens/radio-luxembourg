@@ -16,6 +16,7 @@ export class TrackComponent {
     @Input() track: Track;
 
     clicked(track: Track){
-        this.radioService.requestSong(track);
+        const session_id = localStorage.getItem('session_id');
+        this.radioService.requestSong(session_id, track);
     }
 }

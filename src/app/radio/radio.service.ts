@@ -18,7 +18,7 @@ export class RadioService extends DataService<any>{
                     super(http, baseUrl);
                 }
 
-    requestSong(track: Track){
+    requestSong(sessionId: string, track: Track){
 
         let trackStart = Date.now()
         const gap = 2000;
@@ -37,7 +37,7 @@ export class RadioService extends DataService<any>{
         const request = new Request(track, trackStart);
 
         const obj = JSON.parse(JSON.stringify(request));
-        return this.fs.collection('tracks').add(obj);
+        return this.fs.collection(`sessions/${sessionId}/tracks`).add(obj);
     }
 
     connect(){

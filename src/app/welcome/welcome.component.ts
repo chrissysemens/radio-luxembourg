@@ -48,8 +48,10 @@ export class WelcomeComponent implements OnInit {
       this.playlistId = results[1].id;
 
       const session = new Session(this.userId, this.channelId, this.playlistId);
-      console.log(session);
-      this.sessionService.createSession(this.userId, session);
+      this.sessionService.createSession(this.userId, session)
+        .then((session: any) => {
+          localStorage.setItem('session_id', session.id);
+        }) 
     });
   }
   searched(results: Array<any>){
