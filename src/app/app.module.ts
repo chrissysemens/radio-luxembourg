@@ -18,6 +18,7 @@ import { environment } from '../environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ResponseInterceptor } from './core/http-response.interceptor';
 import { RequestInterceptor } from './core/http-request.interceptor';
+import { SessionService } from './session/session.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { RequestInterceptor } from './core/http-request.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
       multi: true,
-    }
+    },
+    SessionService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Track } from '../types/track';
 import { RadioService } from '../radio/radio.service';
+import { SessionService } from '../session/session.service';
 
 
 @Component({
@@ -12,11 +13,13 @@ import { RadioService } from '../radio/radio.service';
 
 export class TrackComponent {
 
-    constructor(private radioService: RadioService){}
+    constructor(
+      private radioService: RadioService,
+      private sessionService: SessionService){}
     @Input() track: Track;
 
     clicked(track: Track){
-        const session_id = localStorage.getItem('session_id');
-        this.radioService.requestSong(session_id, track);
+        const session = this.sessionService.getSession();
+        this.radioService.requestSong(session.channelId, track, session.user);
     }
 }

@@ -4,10 +4,12 @@ import { Request } from '../types/request';
 import { Track } from '../types/track';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from '../core/data.service';
+import { Profile } from '../types/profile';
 
 const baseUrl = 'https://api.spotify.com/v1';
 const routes = {
     play: () => `/me/player/play`,
+    request: (channelId: string) => `channels/${channelId}/tracks`
 };
 
 @Injectable()
@@ -18,7 +20,7 @@ export class RadioService extends DataService<any>{
                     super(http, baseUrl);
                 }
 
-    requestSong(sessionId: string, track: Track){
+    requestSong(channelId: string, track: Track, profile: Profile){
 
         let trackStart = Date.now()
         const gap = 2000;
@@ -33,11 +35,10 @@ export class RadioService extends DataService<any>{
             });
 
         conn.unsubscribe();
-
-        const request = new Request(track, trackStart);
+        const request = new Request(track, trackStart, profile);
 
         const obj = JSON.parse(JSON.stringify(request));
-        return this.fs.collection(`sessions/${sessionId}/tracks`).add(obj);
+        return this.fs.collection(routes.request(channelId)).add(obj);
     }
 
     connect(){
