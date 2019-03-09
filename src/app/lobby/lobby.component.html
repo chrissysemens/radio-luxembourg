@@ -1,3 +1,6 @@
-<div *ngFor='let channel of channels'>  
-    channel
-</div>
+<div class="lobby">
+    <app-channel-button 
+    *ngFor='let channel of channels' 
+    [channel]='channel'
+    class="channel-button">  
+</app-channel-button>

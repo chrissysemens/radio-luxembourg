@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { FirebaseService } from '../core/firebase.service';
+import { TouchSequence } from 'selenium-webdriver';
 
 const routes = {
     queue: (channelId: string) => `/channels/${channelId}/tracks`,
 };
 
 @Injectable()
-export class QueueService{
+export class QueueService extends FirebaseService<any>{
     
-    constructor(private fs: AngularFirestore) {}
+   constructor(protected fs: AngularFirestore) {
+       super(fs);
+   }
 
    connect(channelId: string){
-        return this.fs.collection(routes.queue(channelId));
+        return this.list(routes.queue(channelId));
     }
 }

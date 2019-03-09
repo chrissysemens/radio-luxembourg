@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { DataService } from '../core/data.service';
+import { HttpService } from '../core/http.service';
 import { Inject} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -9,15 +9,12 @@ import { TokenNames } from '../enums/token-names';
 import { Expiries } from '../enums/expiries';
 
 const baseUrl = 'https://accounts.spotify.com/api';
-const routes = {
-    token: () => `/token`,
-};
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class TokenService extends DataService<any>{
+export class TokenService extends HttpService<any>{
     
     constructor(
         @Inject(DOCUMENT) private document: any,

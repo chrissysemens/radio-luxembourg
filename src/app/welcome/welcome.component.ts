@@ -2,7 +2,7 @@ import { Component, OnInit, ɵConsole } from '@angular/core';
 import { ProfileService } from '../profile/profile.service';
 import { UserPlaylistService } from '../playlist/user-playlist.service';
 import { Channel } from '../types/channel';
-import { CreatePlaylistRequest } from '../requests/playlist-create';
+import { CreatePlaylistRequest } from '../request-types/playlist-create';
 import { SessionService } from '../session/session.service';
 import { QueueService } from '../queue/queue.service';
 import { Profile } from '../types/profile';

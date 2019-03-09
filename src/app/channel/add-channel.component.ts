@@ -13,13 +13,11 @@ export class AddChannelComponent implements OnInit {
   name: string;
   constructor(private channelService: ChannelService) {};
 
-  ngOnInit(
-
-  ){};
+  ngOnInit( ){};
 
   addChannel(){
     const channel = new Channel(this.name, 'fistfullofbees');
     console.log(channel);
-    this.channelService.create(channel);
+    this.channelService.addChannel(channel);
   }
 }

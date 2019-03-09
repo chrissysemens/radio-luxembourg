@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DataService } from '../core/data.service';
+import { HttpService } from '../core/http.service';
 import { Profile } from '../types/profile';
 
 const baseUrl = 'https://api.spotify.com';
@@ -10,7 +10,7 @@ const routes = {
   };
 
 @Injectable()
-export class ProfileService extends DataService<Profile>{
+export class ProfileService extends HttpService<Profile>{
     
     profile: Profile;
 

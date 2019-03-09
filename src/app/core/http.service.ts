@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders, HttpRequest, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
-/** The base Data Service. */
-export abstract class DataService<T> {
+/** The base Http Data Service. */
+export abstract class HttpService<T> {
 
     headers: HttpHeaders;
 
