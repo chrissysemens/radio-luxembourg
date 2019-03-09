@@ -8,20 +8,24 @@ import { UserPlaylistService } from '../playlist/user-playlist.service';
 import { Playlist } from '../types/playlist';
 import { Session } from '../types/sesssion';
 import { SessionService } from '../session/session.service';
+import { QueueService } from '../queue/queue.service';
 
 @Component({
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
-  providers: [ProfileService, UserPlaylistService]
+  providers: [ProfileService, QueueService, UserPlaylistService]
 })
 
 export class ChannelComponent implements OnInit {
 
   channel: Channel;
+  searchResults: Array<any>;
+  queue: any;
 
   constructor(
     private route: ActivatedRoute,
     private profileService: ProfileService,
+    private queueService: QueueService,
     private userPlaylistService: UserPlaylistService,
     private sessionService: SessionService
   ) {};
@@ -43,5 +47,20 @@ export class ChannelComponent implements OnInit {
               this.sessionService.createSession(session);
           });
       });
+
+      this.stayTuned()
   }
+
+  searched(results: Array<any>){
+    this.searchResults = results;
+}
+
+stayTuned(){
+  const session = this.sessionService.getSession();
+  this.queueService.connect(session.channelId).valueChanges()
+    .subscribe((requests: Array<Request>) => {
+      console.log(requests);
+      this.queue = requests;
+    });
+}
 }
