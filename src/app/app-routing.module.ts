@@ -8,7 +8,7 @@ import { ChannelComponent } from './channel/channel.component';
 const routes = [
   { path: '', redirectTo: '/token', pathMatch: 'full' },
   { path: 'add-channel', component: AddChannelComponent },
-  { path: 'channel/:name', component:ChannelComponent, pathMatch: 'full' },
+  { path: 'channel/:id', component:ChannelComponent, pathMatch: 'full' },
   { path: 'token', component: TokenComponent },
   { path: 'lobby', component: LobbyComponent}];
 

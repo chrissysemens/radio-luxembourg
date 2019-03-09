@@ -11,6 +11,7 @@ export class SessionService{
 
     createSession(session: Session){
         this.session = session;
+        console.log(this.session);
     }
 
     getSession(): Session {
