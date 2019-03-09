@@ -32,8 +32,7 @@ export class WelcomeComponent implements OnInit {
   ngOnInit(){}
 
   createSession(){
-    const channel = new Channel('123456', 'TopsOfTracks', 'fistfullofbees');
-    this.channelId = channel.id;
+    const channel = new Channel('TopsOfTracks', 'fistfullofbees');
 
     const playlistReq = new CreatePlaylistRequest('RadioLux', true, false, 'You control the jams');
 
@@ -46,7 +45,7 @@ export class WelcomeComponent implements OnInit {
             .subscribe(
               (playlist: Playlist) => {
 
-              const session = new Session(user, this.channelId, playlist.id);
+              const session = new Session(user, '123456', playlist.id);
               this.sessionService.createSession(session);
           });
       });
