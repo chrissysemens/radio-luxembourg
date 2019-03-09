@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AddChannelComponent } from './channel/add-channel.component';
 import { ChannelComponent } from './channel/channel.component';
+import { ChannelButtonComponent } from './channel/channel-button.component';
 import { environment } from '../environments/environment';
 import { LobbyComponent } from './lobby/lobby.component';
 import { QueueComponent } from './queue/queue.component';
@@ -23,12 +24,12 @@ import { TokenComponent } from './token/token.component';
 import { TrackComponent } from './tracks/track.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
     AddChannelComponent,
     ChannelComponent,
+    ChannelButtonComponent,
     LobbyComponent,
     SearchComponent,
     SearchResultsComponent,

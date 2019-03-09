@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DataService } from '../core/data.service';
-import { CreatePlaylistRequest } from '../requests/playlist-create';
+import { HttpService } from '../core/http.service';
+import { CreatePlaylistRequest } from '../request-types/playlist-create';
 import { Profile } from '../types/profile';
 
 const baseUrl = `https://api.spotify.com/v1/users/`;
@@ -10,7 +10,7 @@ const routes = {
 };
 
 @Injectable()
-export class UserPlaylistService extends DataService<Profile>{
+export class UserPlaylistService extends HttpService<Profile>{
     
     constructor(http: HttpClient) {
         super(http, baseUrl);

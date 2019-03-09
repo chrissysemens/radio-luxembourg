@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Request } from '../types/request';
 import { Track } from '../types/track';
 import { HttpClient } from '@angular/common/http';
-import { DataService } from '../core/data.service';
+import { HttpService } from '../core/http.service';
 import { Profile } from '../types/profile';
 
 const baseUrl = 'https://api.spotify.com/v1';
@@ -13,7 +13,7 @@ const routes = {
 };
 
 @Injectable()
-export class RadioService extends DataService<any>{
+export class RadioService extends HttpService<any>{
     
     constructor(http: HttpClient, 
                 private fs: AngularFirestore) {
@@ -40,12 +40,7 @@ export class RadioService extends DataService<any>{
         const obj = JSON.parse(JSON.stringify(request));
         return this.fs.collection(routes.request(channelId)).add(obj);
     }
-
-    connect(){
-        this.startRadio();
-        this.stayTuned();
-    }
-
+    
     startRadio(){
         const conn = this.fs.collection('tracks')
             .valueChanges()
@@ -66,16 +61,5 @@ export class RadioService extends DataService<any>{
             });
 
         conn.unsubscribe;
-    }
-
-    stayTuned(){    
-        this.fs.collection('tracks')
-            .stateChanges(['added'])
-            .subscribe(tracks => {
-
-                /* Add all listed tracks to the Queue */
-                tracks.forEach(track => {
-                })
-            });
     }
 }

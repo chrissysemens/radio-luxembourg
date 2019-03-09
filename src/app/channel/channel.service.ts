@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { FirebaseService } from '../core/firebase.service';
 import { Channel } from '../types/channel';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const routes = {
-    add: () => `/channels`,
-    getAll: () => `/channels`
+    add: () => `channels`,
+    list: () => `channels`,
+    get: (channelId: string) => `channels/${channelId}`
 };
 
 @Injectable()
-export class ChannelService{
+export class ChannelService extends FirebaseService<Channel> {
 
-   constructor(private fs: AngularFirestore) {}
-
-   create(channel: Channel){
-        const obj = JSON.parse(JSON.stringify(channel));
-        return this.fs.collection('channels').add(obj);
+    constructor(fs: AngularFirestore) {
+        super(fs);
     }
 
-    getAll(){
-        return this.fs.collection(routes.getAll());
+    addChannel(channel: Channel){
+        return this.add(routes.add(), channel);
+    }
+
+    listChannels(){
+        return this.list(routes.list());
     }
 }
