@@ -14,6 +14,6 @@ export class TokenComponent {
 
     ngOnInit(){
         const token = this.tokenService.authorize();
-        this.router.navigate(['/welcome']);
+        this.router.navigate(['/lobby']);
     }
 }
