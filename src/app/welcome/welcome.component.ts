@@ -30,27 +30,7 @@ export class WelcomeComponent implements OnInit {
     private userPlaylistService: UserPlaylistService) {};
 
   ngOnInit(){}
-
-  createSession(){
-    const channel = new Channel('TopsOfTracks', 'fistfullofbees');
-
-    const playlistReq = new CreatePlaylistRequest('RadioLux', true, false, 'You control the jams');
-
-    this.profileService.getMyProfile()
-      .subscribe( 
-        (profile: Profile) => {
-          let user = profile;
-
-          this.userPlaylistService.createRadioPlaylist(user.id, playlistReq)
-            .subscribe(
-              (playlist: Playlist) => {
-
-              const session = new Session(user, '123456', playlist.id);
-              this.sessionService.createSession(session);
-          });
-      });
-  }
-
+  
   searched(results: Array<any>){
     this.searchResults = results;
   }
