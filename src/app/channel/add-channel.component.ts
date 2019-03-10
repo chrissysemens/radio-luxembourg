@@ -20,7 +20,7 @@ export class AddChannelComponent implements OnInit {
 
   ngOnInit( ){
     this.profileService.getMyProfile()
-      .subscribe(res => {
+      .subscribe((res: any) => {
         this.userId = res.id;
         console.log(res.id);
       })

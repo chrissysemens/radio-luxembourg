@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirebaseService } from '../core/firebase.service';
-import { TouchSequence } from 'selenium-webdriver';
 
 const routes = {
     queue: (channelId: string) => `/channels/${channelId}/tracks`,

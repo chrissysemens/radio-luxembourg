@@ -9,7 +9,9 @@ import { Profile } from '../types/profile';
 const baseUrl = 'https://api.spotify.com/v1';
 const routes = {
     play: () => `/me/player/play`,
-    request: (channelId: string) => `channels/${channelId}/tracks`
+    add: (playlistId) => `/playlists/${playlistId}/tracks`,
+    request: (channelId: string) => `channels/${channelId}/tracks`,
+    queue: (channelId: string) => `channels/${channelId}/tracks`
 };
 
 @Injectable()
@@ -41,13 +43,14 @@ export class RadioService extends HttpService<any>{
         return this.fs.collection(routes.request(channelId)).add(obj);
     }
     
-    startRadio(){
-        const conn = this.fs.collection('tracks')
+    /*addTracksToPlaylist(channelId: string){
+        const conn = this.fs.collection(routes.queue(channelId))
             .valueChanges()
             .subscribe((tracks: any) => {
+
+                console.log(tracks);
                 const now = Date.now();
 
-                /* Play the First Track */
                 if(tracks.length){
                     const body = {
                         "uris": [tracks[0].uri],
@@ -61,5 +64,5 @@ export class RadioService extends HttpService<any>{
             });
 
         conn.unsubscribe;
-    }
+    }*/
 }

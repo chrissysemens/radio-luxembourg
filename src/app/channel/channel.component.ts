@@ -38,13 +38,12 @@ export class ChannelComponent implements OnInit {
     const playlistReq = new CreatePlaylistRequest('RadioLux', true, false, 'You control the jams');
 
     this.profileService.getMyProfile()
-      .subscribe( 
-        (profile: Profile) => {
+      .subscribe((profile: Profile) => {
           let user = profile;
-
           this.myPlaylistService.getMyPlaylists()
             .subscribe((data: any) => {
 
+                console.log(data);
                 const playlists = data.items;
                 playlists.forEach((playlist: Playlist) => {
                   if(playlist.name === 'RadioLux') {
@@ -54,19 +53,21 @@ export class ChannelComponent implements OnInit {
 
                 if(this.playlistId){
                   const session = new Session(user, channelId, this.playlistId);
+                  console.log(session);
                   this.sessionService.createSession(session);
-                  this.stayTuned()
+                  this.stayTuned();
                 } else {
                     this.userPlaylistService.createRadioPlaylist(user.id, playlistReq)
                       .subscribe(
                         (playlist: Playlist) => {
                           const session = new Session(user, channelId, playlist.id);
                           this.sessionService.createSession(session);
-                          this.stayTuned()
-                      }).unsubscribe();
+                          console.log(session);
+                          this.stayTuned();
+                      })
                 }
-            }).unsubscribe();
-      }).unsubscribe();
+            })
+      })
   }
 
   searched(results: Array<any>){
@@ -77,8 +78,9 @@ export class ChannelComponent implements OnInit {
     const session = this.sessionService.getSession();
     this.queueService.connect(session.channelId).valueChanges()
       .subscribe((requests: Array<Request>) => {
-        console.log(requests);
         this.queue = requests;
+
+        console.log(this.queue);
       });
   }
 }

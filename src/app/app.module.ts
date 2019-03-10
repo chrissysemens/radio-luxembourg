@@ -15,7 +15,6 @@ import { ChannelButtonComponent } from './channel/channel-button.component';
 import { environment } from '../environments/environment';
 import { LobbyComponent } from './lobby/lobby.component';
 import { QueueComponent } from './queue/queue.component';
-import { ResponseInterceptor } from './core/http-response.interceptor';
 import { RequestInterceptor } from './core/http-request.interceptor';
 import { SearchComponent } from './search/search.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
@@ -49,11 +48,6 @@ import { WelcomeComponent } from './welcome/welcome.component';
   ],
   providers: [
     AngularFirestore,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ResponseInterceptor,
-      multi: true,
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
