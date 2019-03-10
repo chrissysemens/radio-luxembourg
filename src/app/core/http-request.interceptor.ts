@@ -21,23 +21,21 @@ export class RequestInterceptor implements HttpInterceptor {
  
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-        const now = new Date().getTime();
+      const now = new Date().getTime();
 
-        if(now > this.expiry_time){
+      if(now > this.expiry_time){
 
-          /* Token has expired */
-          const token = this.tokenService.refresh();
+        /* Token has expired */
+        const token = this.tokenService.refresh();
 
-          const refreshedRequest = request.clone({
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json',
-              'Authorization': 'Bearer ' + token
-            })
+        const refreshedRequest = request.clone({
+          headers: new HttpHeaders({
+            'Content-Type':  'application/json',
+            'Authorization': 'Bearer ' + token
           })
+        })
 
-          return next.handle(refreshedRequest);
-        }
-        
-        return next.handle(request);
+        return next.handle(refreshedRequest);
+      }
   }
 }
