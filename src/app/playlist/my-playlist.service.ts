@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpService } from '../core/http.service';
 import { Playlist } from '../types/playlist';
 
-const baseUrl = `https://api.spotify.com/v1/me /`;
+const baseUrl = `https://api.spotify.com/v1/me/`;
 const routes = {
     get: () => `playlists`,
 };
@@ -13,5 +13,9 @@ export class MyPlaylistService extends HttpService<Playlist>{
     
     constructor(http: HttpClient) {
         super(http, baseUrl);
+    }
+
+    getMyPlaylists(){
+        return this.query(routes.get());
     }
 }
