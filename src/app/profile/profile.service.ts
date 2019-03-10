@@ -19,6 +19,7 @@ export class ProfileService extends HttpService<Profile>{
     }
 
     getMyProfile(){
+        console.log('in here');
         return this.getOne(routes.me());
     }
 }

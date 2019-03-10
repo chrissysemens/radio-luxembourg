@@ -37,5 +37,7 @@ export class RequestInterceptor implements HttpInterceptor {
 
         return next.handle(refreshedRequest);
       }
+
+      return next.handle(request);
   }
 }
