@@ -9,22 +9,26 @@ import { Playlist } from '../types/playlist';
 import { Session } from '../types/sesssion';
 import { SessionService } from '../session/session.service';
 import { MyPlaylistService } from '../playlist/my-playlist.service';
+import { QueueService } from '../queue/queue.service';
 
 @Component({
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
-  providers: [MyPlaylistService, ProfileService, UserPlaylistService]
+  providers: [MyPlaylistService, QueueService, ProfileService, UserPlaylistService]
 })
 
 export class ChannelComponent implements OnInit {
 
   channel: Channel;
   playlistId: string;
+  searchResults: Array<any>;
+  queue: any;
 
   constructor(
     private route: ActivatedRoute,
     private myPlaylistService: MyPlaylistService,
     private profileService: ProfileService,
+    private queueService: QueueService,
     private userPlaylistService: UserPlaylistService,
     private sessionService: SessionService
   ) {};
@@ -32,7 +36,6 @@ export class ChannelComponent implements OnInit {
   ngOnInit(){
     const channelId = this.route.snapshot.paramMap.get("id");
     const playlistReq = new CreatePlaylistRequest('RadioLux', true, false, 'You control the jams');
-
 
     this.profileService.getMyProfile()
       .subscribe( 
@@ -52,15 +55,30 @@ export class ChannelComponent implements OnInit {
                 if(this.playlistId){
                   const session = new Session(user, channelId, this.playlistId);
                   this.sessionService.createSession(session);
+                  this.stayTuned()
                 } else {
                     this.userPlaylistService.createRadioPlaylist(user.id, playlistReq)
                       .subscribe(
                         (playlist: Playlist) => {
                           const session = new Session(user, channelId, playlist.id);
                           this.sessionService.createSession(session);
+                          this.stayTuned()
                       }).unsubscribe();
                 }
             }).unsubscribe();
       }).unsubscribe();
-    }
+  }
+
+  searched(results: Array<any>){
+    this.searchResults = results;
+  }
+
+  stayTuned(){
+    const session = this.sessionService.getSession();
+    this.queueService.connect(session.channelId).valueChanges()
+      .subscribe((requests: Array<Request>) => {
+        console.log(requests);
+        this.queue = requests;
+      });
+  }
 }

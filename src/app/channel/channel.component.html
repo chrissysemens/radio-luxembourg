@@ -5,12 +5,13 @@
 </div>
 <div class="row">
     <div class="col-8">
-        Request
+        <app-search type='track' (searched)='searched($event)'></app-search>
+        <app-search-results [searchResults]='searchResults'></app-search-results>
     </div>
     <div class="col-4">
         <div class="row">
             <div class="col-12">
-                Queue
+                <app-queue [queue]='queue'></app-queue>
             </div>
         </div>
         <div class="row">
