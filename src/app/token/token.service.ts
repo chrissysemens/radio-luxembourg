@@ -33,29 +33,25 @@ export class TokenService extends HttpService<any>{
     expiry_time: number;
 
     authorize(){
-        const token = localStorage.getItem(this.tokenName);
+        localStorage.clear();
 
-        if (!token){
-            this.activatedRoute.queryParams.subscribe(params => {
+        this.activatedRoute.queryParams.subscribe(params => {
 
-                this.accessToken = params['access_token'];
-                this.refreshToken = params['refresh_token'];
-                this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
+            this.accessToken = params['access_token'];
+            this.refreshToken = params['refresh_token'];
+            this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
 
-                if(this.accessToken){
-                    localStorage.setItem(this.tokenName, this.accessToken);
-                    localStorage.setItem(this.refreshTokenName, this.refreshToken);
-                    localStorage.setItem('expiry_time', this.expiry_time.toString());
+            if(this.accessToken){
+                localStorage.setItem(this.tokenName, this.accessToken);
+                localStorage.setItem(this.refreshTokenName, this.refreshToken);
+                localStorage.setItem('expiry_time', this.expiry_time.toString());
 
-                    return this.accessToken;
-                }
-                else{
-                    this.document.location.href = this.tokenUrl;
-                }
-            })
-        } 
-
-        return token;
+                return this.accessToken;
+            }
+            else{
+                this.document.location.href = this.tokenUrl;
+            }
+        })
     }
 
     refresh(){
@@ -74,7 +70,5 @@ export class TokenService extends HttpService<any>{
             this.expiry_time = Date.now() + (parseInt(Expiries.token) * 1000);
             localStorage.setItem('expiry_time', this.expiry_time.toString());
         });
-
-        return token;
     }
 }
