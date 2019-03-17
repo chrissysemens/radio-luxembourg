@@ -19,7 +19,6 @@ export class PlaylistService extends HttpService<any>{
     }
 
     addTracks(playlistId: string, uris: Array<string>, position?: number) {
-        console.log()
         const body = new AddTracksToPlaylistRequest(uris, position);
         return this.post(routes.tracks(playlistId), body);
     }
@@ -34,18 +33,15 @@ export class PlaylistService extends HttpService<any>{
     }
 
     removeTracks(playlistId: string, uris: Array<string>) {
-        console.log('deleting');
         let data = new Array<Object>();
         uris.forEach(uri => {
             const track = {
                 uri: uri
             }
-
             data.push(track);
         });
         
         const body = new DeleteTracksFromPlaylistRequest(data);
-        console.log(body);
         return this.delete(routes.tracks(playlistId), body);
     }
 }
