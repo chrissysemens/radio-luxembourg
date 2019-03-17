@@ -1,7 +1,7 @@
 export class DeleteTracksFromPlaylistRequest {
-    uris: Array<string>
+    tracks: Array<Object>
 
-    constructor(uris: Array<string>){
-        this.uris = uris;
+    constructor(tracks: Array<Object>){
+        this.tracks = tracks;
     }
 }
