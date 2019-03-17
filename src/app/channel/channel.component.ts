@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../types/channel';
 import { CreatePlaylistRequest } from '../request-types/playlist-create';
@@ -80,7 +80,7 @@ export class ChannelComponent implements OnInit {
     // Get session details
     const session = this.sessionService.getSession();
 
-    // Instanciate an array of the tracks we need to add
+    // Instantiate an array of the tracks we need to add
     let requestsToAdd = new Array<string>();
 
     // Connect to the session
