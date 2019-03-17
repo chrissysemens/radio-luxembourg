@@ -39,7 +39,6 @@ export class WelcomeComponent implements OnInit {
     const session = this.sessionService.getSession();
     this.queueService.connect(session.channelId).valueChanges()
       .subscribe((requests: Array<Request>) => {
-        console.log(requests);
         this.queue = requests;
       });
   }

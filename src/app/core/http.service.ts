@@ -45,6 +45,11 @@ export abstract class HttpService<T> {
             .pipe(map(resp => resp as T));
     }
 
+    delete(actionUrl: string, body: Object){
+        return this.http
+            .request('delete', this.baseUrl + actionUrl, { headers: this.headers , body: body });
+    }
+
     /**
      * @example
      * put()

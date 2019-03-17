@@ -22,7 +22,6 @@ export class AddChannelComponent implements OnInit {
     this.profileService.getMyProfile()
       .subscribe((res: any) => {
         this.userId = res.id;
-        console.log(res.id);
       })
   };
 
