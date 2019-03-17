@@ -12,9 +12,6 @@ import { SessionService } from '../session/session.service';
 import { MyPlaylistService } from '../playlist/my-playlist.service';
 import { QueueService } from '../queue/queue.service';
 import { Request } from '../types/request';
-import { map, first, take } from 'rxjs/operators';
-import { pipe } from 'rxjs';
-import { Track } from '../types/track';
 
 @Component({
   templateUrl: './channel.component.html',
@@ -120,7 +117,7 @@ export class ChannelComponent implements OnInit {
             // Clean up any old songs
             if(request.track_start + request.track.duration_ms < Date.now()){
               this.queueService.deleteTrack(session.channelId, requestId);
-              this.playlistService.removeTracks(session.playlistId, [request.track.uri]);
+              this.playlistService.removeTracks(session.playlistId, [request.track.uri]).subscribe();
             }
         })
       })

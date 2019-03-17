@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpService } from '../core/http.service';
-import { Playlist } from '../types/playlist';
 import { AddTracksToPlaylistRequest } from '../request-types/playlist-add-tracks';
 import { ReplacePlaylistTracksRequest } from '../request-types/playlist-replace-tracks';
 import { DeleteTracksFromPlaylistRequest } from '../request-types/playlist-delete-tracks';
@@ -35,7 +34,18 @@ export class PlaylistService extends HttpService<any>{
     }
 
     removeTracks(playlistId: string, uris: Array<string>) {
-        const body = new DeleteTracksFromPlaylistRequest(uris);
-        return this.delete(routes.tracks(playlistId), uris);
+        console.log('deleting');
+        let data = new Array<Object>();
+        uris.forEach(uri => {
+            const track = {
+                uri: uri
+            }
+
+            data.push(track);
+        });
+        
+        const body = new DeleteTracksFromPlaylistRequest(data);
+        console.log(body);
+        return this.delete(routes.tracks(playlistId), body);
     }
 }
