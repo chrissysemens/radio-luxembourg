@@ -10,6 +10,10 @@ export abstract class FirebaseService<T> {
         const obj = JSON.parse(JSON.stringify(item));
         return this.fs.collection(path).add(obj);
     }
+
+    delete(path: string){
+        return this.fs.doc(path).delete();
+    }
     
     list(path: string){
         return this.fs.collection(path);

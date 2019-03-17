@@ -5,6 +5,7 @@ export class Session {
     playlistId: string
     channelId: string
     start: number
+    connected: boolean
 
     constructor(user: Profile, 
                 channelId: string, 
@@ -12,6 +13,7 @@ export class Session {
         this.user = user;
         this.playlistId = playlistId;
         this.channelId = channelId;
-        this.start = new Date().getTime();
+        this.start = Date.now();
+        this.connected = false;
     }
 }

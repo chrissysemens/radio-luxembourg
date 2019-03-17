@@ -21,7 +21,7 @@ export class RequestInterceptor implements HttpInterceptor {
  
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     
-      const now = new Date().getTime();
+      const now = Date.now();
 
       if(now > this.expiry_time){
 
@@ -36,8 +36,8 @@ export class RequestInterceptor implements HttpInterceptor {
         })
 
         return next.handle(refreshedRequest);
+      } else {
+        return next.handle(request);
       }
-
-      return next.handle(request);
   }
 }

@@ -5,6 +5,7 @@ import { Track } from '../types/track';
 import { HttpClient } from '@angular/common/http';
 import { HttpService } from '../core/http.service';
 import { Profile } from '../types/profile';
+import { map, take }  from 'rxjs/operators';
 
 const baseUrl = 'https://api.spotify.com/v1';
 const routes = {
@@ -23,46 +24,29 @@ export class RadioService extends HttpService<any>{
                 }
 
     requestSong(channelId: string, track: Track, profile: Profile){
+        let trackStart = 0;
+        let gap = 0;
 
-        let trackStart = Date.now()
-        const gap = 2000;
-
-        const conn = this.fs.collection('tracks').valueChanges()
-            .subscribe((tracks: any) => {
-                const lastTrack = tracks[tracks.length - 1];
-
-                if(lastTrack){
-                    trackStart = (lastTrack.track_start + lastTrack.duration) + gap;
-                }
+        this.fs.collection(routes.request(channelId))
+        .valueChanges() 
+        .pipe(take(1))
+        .subscribe((requests: Array<Request>) => {
+            requests = requests.sort((a:Request , b: Request) => {
+                return a.track_start - b.track_start;
             });
 
-        conn.unsubscribe();
-        const request = new Request(track, trackStart, profile);
+            const lastRequest = requests[requests.length - 1];
 
-        const obj = JSON.parse(JSON.stringify(request));
-        return this.fs.collection(routes.request(channelId)).add(obj);
+            if(lastRequest &&
+                (lastRequest.track_start + lastRequest.track.duration_ms) < Date.now()) {
+                trackStart = (lastRequest.track_start + lastRequest.track.duration_ms) + gap;
+            } else {
+                trackStart = Date.now();
+            }
+            const request = new Request(track, trackStart, profile);
+            const obj = JSON.parse(JSON.stringify(request));
+
+            return this.fs.collection(routes.request(channelId)).add(obj);
+        });
     }
-    
-    /*addTracksToPlaylist(channelId: string){
-        const conn = this.fs.collection(routes.queue(channelId))
-            .valueChanges()
-            .subscribe((tracks: any) => {
-
-                console.log(tracks);
-                const now = Date.now();
-
-                if(tracks.length){
-                    const body = {
-                        "uris": [tracks[0].uri],
-                        "position_ms": now - tracks[0].track_start
-                    }
-
-                    this.put(routes.play(), body).subscribe(resp => console.log(resp));
-                } else {
-                    // TODO: What if there's no songs?  
-                }
-            });
-
-        conn.unsubscribe;
-    }*/
 }

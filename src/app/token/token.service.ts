@@ -39,7 +39,7 @@ export class TokenService extends HttpService<any>{
 
             this.accessToken = params['access_token'];
             this.refreshToken = params['refresh_token'];
-            this.expiry_time = new Date().getTime() + parseInt(Expiries.token) * 1000;
+            this.expiry_time = Date.now() + parseInt(Expiries.token) * 1000;
 
             if(this.accessToken){
                 localStorage.setItem(this.tokenName, this.accessToken);

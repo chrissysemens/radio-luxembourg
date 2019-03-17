@@ -20,7 +20,6 @@ export class TrackComponent {
 
     clicked(track: Track){
         const session = this.sessionService.getSession();
-        console.log(session);
         this.radioService.requestSong(session.channelId, track, session.user);
     }
 }

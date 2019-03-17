@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../types/channel';
 import { CreatePlaylistRequest } from '../request-types/playlist-create';
 import { Profile } from '../types/profile';
+import { PlaylistService } from '../playlist/playlist.service';
 import { ProfileService } from '../profile/profile.service';
 import { UserPlaylistService } from '../playlist/user-playlist.service';
 import { Playlist } from '../types/playlist';
@@ -10,11 +11,15 @@ import { Session } from '../types/sesssion';
 import { SessionService } from '../session/session.service';
 import { MyPlaylistService } from '../playlist/my-playlist.service';
 import { QueueService } from '../queue/queue.service';
+import { Request } from '../types/request';
+import { map, first, take } from 'rxjs/operators';
+import { pipe } from 'rxjs';
+import { Track } from '../types/track';
 
 @Component({
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
-  providers: [MyPlaylistService, QueueService, ProfileService, UserPlaylistService]
+  providers: [MyPlaylistService, QueueService, PlaylistService, ProfileService, UserPlaylistService]
 })
 
 export class ChannelComponent implements OnInit {
@@ -27,6 +32,7 @@ export class ChannelComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private myPlaylistService: MyPlaylistService,
+    private playlistService: PlaylistService,
     private profileService: ProfileService,
     private queueService: QueueService,
     private userPlaylistService: UserPlaylistService,
@@ -42,8 +48,6 @@ export class ChannelComponent implements OnInit {
           let user = profile;
           this.myPlaylistService.getMyPlaylists()
             .subscribe((data: any) => {
-
-                console.log(data);
                 const playlists = data.items;
                 playlists.forEach((playlist: Playlist) => {
                   if(playlist.name === 'RadioLux') {
@@ -53,7 +57,6 @@ export class ChannelComponent implements OnInit {
 
                 if(this.playlistId){
                   const session = new Session(user, channelId, this.playlistId);
-                  console.log(session);
                   this.sessionService.createSession(session);
                   this.stayTuned();
                 } else {
@@ -62,7 +65,6 @@ export class ChannelComponent implements OnInit {
                         (playlist: Playlist) => {
                           const session = new Session(user, channelId, playlist.id);
                           this.sessionService.createSession(session);
-                          console.log(session);
                           this.stayTuned();
                       })
                 }
@@ -75,12 +77,53 @@ export class ChannelComponent implements OnInit {
   }
 
   stayTuned(){
+    // Get session details
     const session = this.sessionService.getSession();
-    this.queueService.connect(session.channelId).valueChanges()
-      .subscribe((requests: Array<Request>) => {
-        this.queue = requests;
 
-        console.log(this.queue);
-      });
+    // Instantiate an array of the tracks we need to add
+    let requestsToAdd = new Array<string>();
+
+    // Connect to the session
+    this.queueService.connect(session.channelId)
+      .snapshotChanges(['added'])
+      .subscribe(requests => {
+
+        // With each update:
+        this.playlistService.getTracks(session.playlistId)
+          .subscribe((data: any) => {
+
+            let playlistTracks = data.items;
+
+            // Get all of the tracks in the queue
+            requests.map(item => {
+              const requestId = item.payload.doc.id;
+              const request = item.payload.doc.data() as Request;
+
+            // If the playlist is empty, just add them
+            if(!playlistTracks.length){
+              requestsToAdd.push(request.track.uri);
+            } else {
+
+              // If it has length, just add the ones that are not already on the playlist  
+              let found = playlistTracks.some(item => item.track.id === request.track.id);
+              if(!found){
+                requestsToAdd.push(request.track.uri);
+              }
+            }
+
+            // Update the playlist
+            if(requestsToAdd.length){
+              this.playlistService.addTracks(session.playlistId, requestsToAdd).subscribe();
+              requestsToAdd = new Array<string>();
+            }
+
+            // Clean up any old songs
+            if(request.track_start + request.track.duration_ms < Date.now()){
+              this.queueService.deleteTrack(session.channelId, requestId);
+              this.playlistService.removeTracks(session.playlistId, [request.track.uri]);
+            }
+        })
+      })
+    })
   }
 }
