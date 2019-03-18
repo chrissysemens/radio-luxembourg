@@ -13,9 +13,7 @@ import { MyPlaylistService } from '../playlist/my-playlist.service';
 import { QueueService } from '../queue/queue.service';
 import { Request } from '../types/request';
 import { RadioService } from '../radio/radio.service';
-import { takeLast, take } from 'rxjs/operators';
-import { componentNeedsResolution } from '@angular/core/src/metadata/resource_loading';
-import { StringifyOptions } from 'querystring';
+import { take } from 'rxjs/operators';
 
 @Component({
   templateUrl: './channel.component.html',
