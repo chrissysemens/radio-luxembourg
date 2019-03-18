@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Channel } from '../types/channel';
 import { CreatePlaylistRequest } from '../request-types/playlist-create';
@@ -12,17 +12,22 @@ import { SessionService } from '../session/session.service';
 import { MyPlaylistService } from '../playlist/my-playlist.service';
 import { QueueService } from '../queue/queue.service';
 import { Request } from '../types/request';
+import { RadioService } from '../radio/radio.service';
+import { takeLast, take } from 'rxjs/operators';
+import { componentNeedsResolution } from '@angular/core/src/metadata/resource_loading';
+import { StringifyOptions } from 'querystring';
 
 @Component({
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
-  providers: [MyPlaylistService, QueueService, PlaylistService, ProfileService, UserPlaylistService]
+  providers: [MyPlaylistService, QueueService, PlaylistService, ProfileService, RadioService, UserPlaylistService]
 })
 
 export class ChannelComponent implements OnInit {
 
   channel: Channel;
   playlistId: string;
+  playlistUri: string;
   searchResults: Array<any>;
   queue: any;
 
@@ -33,7 +38,8 @@ export class ChannelComponent implements OnInit {
     private profileService: ProfileService,
     private queueService: QueueService,
     private userPlaylistService: UserPlaylistService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private radioService: RadioService
   ) {};
 
   ngOnInit(){
@@ -43,26 +49,34 @@ export class ChannelComponent implements OnInit {
     this.profileService.getMyProfile()
       .subscribe((profile: Profile) => {
           let user = profile;
+
           this.myPlaylistService.getMyPlaylists()
             .subscribe((data: any) => {
                 const playlists = data.items;
                 playlists.forEach((playlist: Playlist) => {
                   if(playlist.name === 'RadioLux') {
                     this.playlistId = playlist.id;
+                    this.playlistUri = playlist.uri;
                   }
                 });
 
                 if(this.playlistId){
                   const session = new Session(user, channelId, this.playlistId);
                   this.sessionService.createSession(session);
+                  
+
                   this.stayTuned();
+                  this.play(this.playlistUri);
+
                 } else {
                     this.userPlaylistService.createRadioPlaylist(user.id, playlistReq)
                       .subscribe(
                         (playlist: Playlist) => {
                           const session = new Session(user, channelId, playlist.id);
                           this.sessionService.createSession(session);
+                          
                           this.stayTuned();
+                          this.play(playlist.uri);
                       })
                 }
             })
@@ -72,6 +86,21 @@ export class ChannelComponent implements OnInit {
   searched(results: Array<any>){
     this.searchResults = results;
   }
+
+  play(playlistUri: string) {
+    const session = this.sessionService.getSession();
+
+    this.queueService.getTracks(session.channelId)
+      .valueChanges()
+      .pipe(take(1))
+      .subscribe((requests: Array<Request>) => {
+          
+          if(requests.length){
+            const position_ms = Date.now() - requests[0].track_start;
+            this.radioService.startRadio(playlistUri, position_ms).subscribe();
+          }
+      });
+   }
 
   stayTuned(){
     // Get session details
