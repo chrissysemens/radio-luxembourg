@@ -143,7 +143,7 @@ export class ChannelComponent implements OnInit {
 
             // Clean up any old songs
             if(request.track_start + request.track.duration_ms < Date.now()){
-              this.queueService.deleteTrack(session.channelId, requestId);
+              // this.queueService.deleteTrack(session.channelId, requestId);
               this.playlistService.removeTracks(session.playlistId, [request.track.uri]).subscribe();
             }
         })
