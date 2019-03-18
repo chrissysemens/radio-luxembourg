@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Track } from '../types/track';
-import { RadioService } from '../radio/radio.service';
+import { QueueService } from '../queue/queue.service';
 import { SessionService } from '../session/session.service';
 
 
@@ -8,18 +8,18 @@ import { SessionService } from '../session/session.service';
   selector: 'app-track',
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss'],
-  providers: [RadioService]
+  providers: [QueueService]
 })
 
 export class TrackComponent {
 
     constructor(
-      private radioService: RadioService,
+      private queueService: QueueService,
       private sessionService: SessionService){}
     @Input() track: Track;
 
     clicked(track: Track){
         const session = this.sessionService.getSession();
-        this.radioService.requestSong(session.channelId, track, session.user);
+        this.queueService.requestSong(session.channelId, track, session.user);
     }
 }

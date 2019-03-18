@@ -73,7 +73,8 @@ export class SearchService extends HttpService<any> {
                     let playlist = new Playlist(item.id, 
                                           item.name,
                                           item.owner,
-                                          item.tracks);
+                                          item.tracks,
+                                          item.uri);
                     playlists.push(playlist);
                 });
             });
