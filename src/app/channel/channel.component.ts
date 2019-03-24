@@ -100,7 +100,7 @@ export class ChannelComponent implements OnInit {
           const trackFinished = Date.now() > request.track_start + request.track.duration_ms;
 
           if(trackStarted && !trackFinished){
-            const currentPosition = (request.track_start + request.track.duration_ms) - Date.now();
+            const currentPosition = Date.now() - request.track_start;
             this.playerService.startPlayer(playlistUri, currentPosition).pipe(take(1)).subscribe();
           }
         });
