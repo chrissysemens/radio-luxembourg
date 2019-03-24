@@ -97,7 +97,7 @@ export class ChannelComponent implements OnInit {
         requests.forEach(request => {
 
           const trackStarted = Date.now() > request.track_start;
-          const trackFinished = Date.now() < request.track_start + request.track.duration_ms;
+          const trackFinished = Date.now() > request.track_start + request.track.duration_ms;
 
           if(trackStarted && !trackFinished){
             const currentPosition = (request.track_start + request.track.duration_ms) - Date.now();
