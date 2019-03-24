@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Channel } from '../types/channel';
 import { Router } from '@angular/router';
 
@@ -14,9 +14,12 @@ export class ChannelButtonComponent implements OnInit {
   constructor(private router: Router) {};
 
   @Input() channel: Channel;
+  @Output() channelSelected = new EventEmitter(); 
+
   ngOnInit(){}
 
   join(channel: Channel){
-    this.router.navigate(['channel', channel.id]);
+
+    this.channelSelected.emit(channel.id);
   }
 }

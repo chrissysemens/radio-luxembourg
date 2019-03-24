@@ -20,6 +20,6 @@ export class TrackComponent {
 
     clicked(track: Track){
         const session = this.sessionService.getSession();
-        this.queueService.requestSong(session.channelId, track, session.user);
+        this.queueService.requestSong(session.channelId, track, session.userId);
     }
 }

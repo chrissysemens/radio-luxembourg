@@ -1,17 +1,18 @@
-import { Profile } from '../types/profile';
-
 export class Session {
-    user: Profile
+    userId: string
     playlistId: string
+    playlistUri: string
     channelId: string
     start: number
     connected: boolean
 
-    constructor(user: Profile, 
+    constructor(userId: string, 
                 channelId: string, 
-                playlistId: string){
-        this.user = user;
+                playlistId: string,
+                playlistUri: string){
+        this.userId = userId;
         this.playlistId = playlistId;
+        this.playlistUri = playlistUri;
         this.channelId = channelId;
         this.start = Date.now();
         this.connected = false;

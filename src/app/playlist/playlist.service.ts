@@ -8,7 +8,7 @@ import { DeleteTracksFromPlaylistRequest } from '../request-types/playlist-delet
 const baseUrl = 'https://api.spotify.com/v1/playlists';
 
 const routes = {
-    tracks: (playlistId: string) => `/${playlistId}/tracks`,
+    tracks: (playlistId: string) => `/${playlistId}/tracks`
 };
 
 @Injectable()
@@ -29,7 +29,7 @@ export class PlaylistService extends HttpService<any>{
     }
 
     getTracks(playlistId: string) {
-        return this.query(routes.tracks(playlistId));
+        return this.get(routes.tracks(playlistId));
     }
 
     removeTracks(playlistId: string, uris: Array<string>) {
@@ -43,5 +43,12 @@ export class PlaylistService extends HttpService<any>{
         
         const body = new DeleteTracksFromPlaylistRequest(data);
         return this.delete(routes.tracks(playlistId), body);
+    }
+
+    clearPlaylist(playlistId: string){
+    let data = new Array<string>();
+    const body = new ReplacePlaylistTracksRequest(data);
+
+    return this.put(routes.tracks(playlistId), body);
     }
 }

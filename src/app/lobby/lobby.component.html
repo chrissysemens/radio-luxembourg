@@ -2,6 +2,7 @@
     <app-channel-button 
         *ngFor='let channel of channels' 
         [channel]='channel'
-        class="channel-button">  
+        class="channel-button"
+        (channelSelected)=channelSelected($event)>  
     </app-channel-button>
 </div>

@@ -9,11 +9,24 @@ export class SessionService{
 
     session: Session;
 
-    createSession(session: Session){
-        this.session = session;
+    createSession(userId: string, channelId: string, playlistId: string, playlistUri: string){
+        localStorage.setItem('session_user_id', userId);
+        localStorage.setItem('session_channel_id', channelId);
+        localStorage.setItem('session_playlist_id', playlistId);
+        localStorage.setItem('session_playlist_uri', playlistUri);
     }
 
     getSession(): Session {
-        return this.session;
+        const userId = localStorage.getItem('session_user_id');
+        const channelId = localStorage.getItem('session_channel_id');
+        const playlistId = localStorage.getItem('session_playlist_id');
+        const playlistUri = localStorage.getItem('session_playlist_uri');
+
+        const session = new Session(userId, channelId, playlistId, playlistUri);
+        return session
+    }
+
+    isSessionValid(session: Session){
+        return session.userId && session.channelId && session.playlistId;
     }
 }
