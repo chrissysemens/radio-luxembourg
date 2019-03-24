@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirebaseService } from '../core/firebase.service';
 import { Track } from '../types/track';
-import { Profile } from '../types/profile';
 import { Request } from '../types/request';
-import { map, take, takeLast } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 const routes = {
     queue: (channelId: string) => `/channels/${channelId}/tracks`,
@@ -31,7 +30,7 @@ export class QueueService extends FirebaseService<any>{
         return this.list(routes.queue(channelId));
     }    
 
-    requestSong(channelId: string, track: Track, profile: Profile){
+    requestSong(channelId: string, track: Track, userId: string){
         let trackStart = 0;
         let gap = 0;
 
@@ -47,11 +46,11 @@ export class QueueService extends FirebaseService<any>{
 
             if(lastRequest &&
                 (lastRequest.track_start + lastRequest.track.duration_ms) < Date.now()) {
-                trackStart = (lastRequest.track_start + lastRequest.track.duration_ms) + gap;
+                    trackStart = (lastRequest.track_start + lastRequest.track.duration_ms) + gap;
             } else {
                 trackStart = Date.now();
             }
-            const request = new Request(track, trackStart, profile);
+            const request = new Request(track, trackStart, userId);
             const obj = JSON.parse(JSON.stringify(request));
 
             return this.fs.collection(routes.request(channelId)).add(obj);

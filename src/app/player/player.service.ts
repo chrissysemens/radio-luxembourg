@@ -6,17 +6,18 @@ import { HttpService } from '../core/http.service';
 const baseUrl = 'https://api.spotify.com/v1';
 const routes = {
     play: () => `/me/player/play`,
+    playing: () => `/me/player/currently-playing`
 };
 
 @Injectable()
-export class RadioService extends HttpService<any>{
+export class PlayerService extends HttpService<any>{
     
     constructor(http: HttpClient, 
                 private fs: AngularFirestore) {
                     super(http, baseUrl);
                 }
 
-    startRadio(context_uri: string, position_ms?: number, offset?: number){
+    startPlayer(context_uri: string, position_ms?: number, offset?: number){
         const body = {
             context_uri,
             offset,
@@ -25,4 +26,8 @@ export class RadioService extends HttpService<any>{
         return this.put(routes.play(), body);
     }
 
+
+    getCurrentlyPlaying(){
+        return this.getOne(routes.playing());
+    }
 }

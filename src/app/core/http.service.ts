@@ -19,11 +19,11 @@ export abstract class HttpService<T> {
 
     /**
      * @example
-     * query()
+     * get()
      *
      * @returns A list of data of type<T>
      */
-    query(actionUrl: string, params?: HttpParams){
+    get(actionUrl: string, params?: HttpParams){
 
         params ? params : {};
         return this.http

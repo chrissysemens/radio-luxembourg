@@ -9,13 +9,13 @@ const routes = {
 };
 
 @Injectable()
-export class MyPlaylistService extends HttpService<Playlist>{
+export class MyPlaylistService extends HttpService<any>{
     
     constructor(http: HttpClient) {
         super(http, baseUrl);
     }
 
     getMyPlaylists(){
-        return this.query(routes.get());
+        return this.getOne(routes.get());
     }
 }
