@@ -58,7 +58,7 @@ export class ChannelComponent implements OnInit {
                 let found = playlistTracks.some(item => item.track.id === request.track.id);
                 
                 if(!found){
-                  if(request.track_start + request.track.duration_ms > Date.now()){
+                  if(request.track_start + request.track.duration_ms < Date.now()){
                     requestsToAdd.push(request.track.uri);
                   }
                 }
