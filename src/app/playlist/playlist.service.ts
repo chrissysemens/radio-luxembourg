@@ -25,7 +25,7 @@ export class PlaylistService extends HttpService<any>{
 
     replaceTracks(playlistId: string, uris: Array<string>) {
         const body = new ReplacePlaylistTracksRequest(uris);
-        return this.post(routes.tracks(playlistId), body);
+        return this.put(routes.tracks(playlistId), body);
     }
 
     getTracks(playlistId: string) {
