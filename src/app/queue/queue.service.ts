@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { FirebaseService } from '../core/firebase.service';
 import { Track } from '../types/track';
 import { Request } from '../types/request';
 import { take } from 'rxjs/operators';
+import { Expiries } from '../enums/expiries';
 
 const routes = {
     queue: (channelId: string) => `/channels/${channelId}/tracks`,
@@ -22,8 +24,8 @@ export class QueueService extends FirebaseService<any>{
         return this.list(routes.queue(channelId));
     }
 
-    deleteTrack(channelId: string, trackId: string){
-        return this.delete(routes.remove(channelId, trackId));
+    deleteTrack(channelId: string, requestId: string){
+        return this.delete(routes.remove(channelId, requestId));
     }
 
     getTracks(channelId: string){
@@ -45,7 +47,7 @@ export class QueueService extends FirebaseService<any>{
             const lastRequest = requests[requests.length - 1];
 
             if(lastRequest &&
-                (lastRequest.track_start + lastRequest.track.duration_ms) < Date.now()) {
+                (lastRequest.track_start + lastRequest.track.duration_ms) > Date.now()) {
                     trackStart = (lastRequest.track_start + lastRequest.track.duration_ms) + gap;
             } else {
                 trackStart = Date.now();
@@ -54,6 +56,22 @@ export class QueueService extends FirebaseService<any>{
             const obj = JSON.parse(JSON.stringify(request));
 
             return this.fs.collection(routes.request(channelId)).add(obj);
+        });
+    }
+
+    clearUpQueue(channelId: string){
+        this.fs.collection(routes.request(channelId))
+        .snapshotChanges() 
+        .pipe(take(1))
+        .subscribe((res: any) => {
+            res.forEach((response: any) => {
+                const requestId = response.payload.doc.id;
+                const request = response.payload.doc.data() as Request;
+
+                if(request.track_start < (Date.now() - Expiries.request)){
+                    this.deleteTrack(channelId, requestId);
+                }
+            })
         });
     }
 }

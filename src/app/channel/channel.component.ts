@@ -4,7 +4,7 @@ import { Session } from '../types/sesssion';
 import { QueueService } from '../queue/queue.service';
 import { PlaylistService } from '../playlist/playlist.service';
 import { Request } from '../types/request';
-import { take  } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { PlayerService } from '../player/player.service';
 
 @Component({
@@ -15,6 +15,7 @@ import { PlayerService } from '../player/player.service';
 
 export class ChannelComponent implements OnInit {
 
+  queue: Array<Request>;
   searchResults: Array<any>;
   session: Session;
 
@@ -25,6 +26,7 @@ export class ChannelComponent implements OnInit {
 
   ngOnInit(){
      this.session = this.sessionService.getSession();
+     this.connectQueue();
      this.stayTuned();
      this.play(this.session.playlistUri);
   }
@@ -32,11 +34,26 @@ export class ChannelComponent implements OnInit {
   searched(results: Array<any>){
     this.searchResults = results;
   }
+  
+
+  connectQueue(){
+    this.queueService.connect(this.session.channelId)
+      .valueChanges()
+      .subscribe((requests: Array<Request>) => {
+        this.queue = requests.filter(request => {
+          return request.track_start + request.track.duration_ms > Date.now();
+        });
+        console.log(this.queue);
+      });
+  }
+
 
   stayTuned(){
     let requestsToAdd = new Array<string>();
     let requestsToRemove = new Array<string>();
 
+    this.queueService.clearUpQueue(this.session.channelId);
+    
     this.queueService.connect(this.session.channelId)
       .snapshotChanges(['added'])
       .subscribe(requests => {
@@ -52,13 +69,22 @@ export class ChannelComponent implements OnInit {
                 requestsToRemove.push(request.track.uri);
               }
 
-              if(!playlistTracks.length){
-                requestsToAdd.push(request.track.uri);
-              } else {
+              if(requestsToRemove.length){
+                this.playlistService.removeTracks(this.session.playlistId, requestsToRemove)
+                  .pipe(take(1))
+                  .subscribe();
+                requestsToRemove = new Array<string>();
+              }
+
+              if(!playlistTracks.length 
+                  && request.track_start + request.track.duration_ms > Date.now()){
+                    requestsToAdd.push(request.track.uri);
+                } else {
+
                 let found = playlistTracks.some(item => item.track.id === request.track.id);
                 
                 if(!found){
-                  if(request.track_start + request.track.duration_ms < Date.now()){
+                  if(request.track_start + request.track.duration_ms > Date.now()){
                     requestsToAdd.push(request.track.uri);
                   }
                 }
@@ -69,13 +95,6 @@ export class ChannelComponent implements OnInit {
                   .pipe(take(1))
                   .subscribe();
                 requestsToAdd = new Array<string>();
-              }
-
-              if(requestsToRemove.length){
-                this.playlistService.removeTracks(this.session.playlistId, requestsToRemove)
-                  .pipe(take(1))
-                  .subscribe();
-                requestsToRemove = new Array<string>();
               }
         });
       })
@@ -101,6 +120,9 @@ export class ChannelComponent implements OnInit {
 
           if(trackStarted && !trackFinished){
             const currentPosition = Date.now() - request.track_start;
+            const posMins = currentPosition / 60000;
+            console.log(`starting playback of: ${request.track.name}`);
+            console.log(`at position: ${posMins}`);
             this.playerService.startPlayer(playlistUri, currentPosition).pipe(take(1)).subscribe();
           }
         });

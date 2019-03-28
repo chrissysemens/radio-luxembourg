@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseService } from '../core/firebase.service';
 import { Channel } from '../types/channel';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 const routes = {
     add: () => `channels`,
