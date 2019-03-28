@@ -57,53 +57,26 @@ export class ChannelComponent implements OnInit {
     this.queueService.connect(this.session.channelId)
       .snapshotChanges(['added'])
       .subscribe(requests => {
-        console.log('a song has been added');
+        let newQueue = new Array<Request>();
 
-        this.playlistService.getTracks(this.session.playlistId)
-          .subscribe((data: any) => {
-            let playlistTracks = data.items;
+          requests.map(item => {
+            const request = item.payload.doc.data() as Request;
 
-            requests.map(item => {
-              const request = item.payload.doc.data() as Request;
+            if(request.track_start > Date.now()){
+              newQueue.push(request);
+            }
+          });
 
-              if(request.track_start + request.track.duration_ms < Date.now()){
-                requestsToRemove.push(request.track.uri);
-                console.log('track is old, being removed:', request.track.name);
-              }
+          newQueue = newQueue.sort((a:Request , b: Request) => {
+            return a.track_start - b.track_start;
+          });
 
-              if(requestsToRemove.length){
-                console.log('removal happening');
-                this.playlistService.removeTracks(this.session.playlistId, requestsToRemove)
-                  .pipe(take(1))
-                  .subscribe();
-                requestsToRemove = new Array<string>();
-              }
+          const qis = new Array<string>();
+          newQueue.forEach(qi => {
+            qis.push(qi.track.uri);
+          })
 
-              if(!playlistTracks.length 
-                  && request.track_start + request.track.duration_ms > Date.now()){
-                    console.log('playlist empty, adding', request.track.name)
-                    requestsToAdd.push(request.track.uri);
-                } else {
-
-                let found = playlistTracks.some(item => item.track.id === request.track.id);
-                
-                if(!found){
-                  if(request.track_start + request.track.duration_ms > Date.now()){
-                    console.log('playlist some songs, adding"', request.track.name)
-                    requestsToAdd.push(request.track.uri);
-                  }
-                }
-              }
-
-              if(requestsToAdd.length){
-                console.log('doing tha adding');
-                this.playlistService.addTracks(this.session.playlistId, requestsToAdd)
-                  .pipe(take(1))
-                  .subscribe();
-                requestsToAdd = new Array<string>();
-              }
-        });
-      })
+          this.playlistService.replaceTracks(this.session.playlistId, qis).subscribe();
     })
   }
 
