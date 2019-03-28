@@ -1,6 +1,7 @@
 import { Track } from './track';
 
 export class Request {
+    id?: string;
     request_time: Date
     track_start: number
     track: Track

@@ -1,4 +1,5 @@
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { FirebaseQuery } from '../query-types/firbase.query';
 
 /** The base Firebase Data Service. */
