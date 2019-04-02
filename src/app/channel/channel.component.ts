@@ -49,8 +49,12 @@ export class ChannelComponent implements OnInit {
     this.queueService.connect(this.session.channelId)
       .valueChanges()
       .subscribe((requests: Array<Request>) => {
-        this.queue = requests.filter(request => {
+        requests = requests.filter(request => {
           return request.track_start + request.track.duration_ms > Date.now();
+        });
+
+        this.queue = requests.sort((a:Request , b: Request) => {
+          return a.track_start - b.track_start;
         });
       });
   }
@@ -108,18 +112,17 @@ export class ChannelComponent implements OnInit {
                   .subscribe();
                 requestsToAdd = new Array<string>();
               }
+            })
         });
+
+        this.profileService.getCurrentlyPlaying()
+          .pipe(take(1))
+          .subscribe((resp: any) => {
+            if(!resp || (resp.progress_ms <=0)){
+              this.play();
+            }
+          });
       })
-
-      this.profileService.getCurrentlyPlaying()
-            .pipe(take(1))
-            .subscribe((resp: any) => {
-
-              if(resp.progress_ms <= 0){
-                this.play();
-              }
-            });
-    })
   }
 
 
@@ -149,10 +152,7 @@ export class ChannelComponent implements OnInit {
             }
 
             window.setTimeout(() => this.play(), remaining);
-            const posMins = currentPosition / 60000;
-            console.log(`currently playing: ${request.track.name}`);
-            console.log(`at position: ${posMins}`);
-            this.playerService.startPlayer(playlistUri, currentPosition).pipe(take(1)).subscribe();
+            this.playerService.startPlayer([request.track.uri], currentPosition).pipe(take(1)).subscribe();
           }
         });
       });
