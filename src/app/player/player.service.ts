@@ -17,9 +17,9 @@ export class PlayerService extends HttpService<any>{
                     super(http, baseUrl);
                 }
 
-    startPlayer(context_uri: string, position_ms?: number, offset?: number){
+    startPlayer(uris: Array<string>, position_ms?: number, offset?: number){
         const body = {
-            context_uri,
+            uris,
             offset,
             position_ms
         }
