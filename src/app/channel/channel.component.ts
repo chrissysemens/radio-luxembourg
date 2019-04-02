@@ -69,7 +69,7 @@ export class ChannelComponent implements OnInit {
     this.queueService.connect(this.session.channelId)
       .snapshotChanges(['added'])
       .subscribe(requests => {
-
+      
         this.playlistService.getTracks(this.session.playlistId)
           .subscribe((data: any) => {
             let playlistTracks = data.items;
@@ -122,9 +122,8 @@ export class ChannelComponent implements OnInit {
     })
   }
 
-  play() {
-    this.session = this.sessionService.getSession();
 
+  play() {
     this.queueService.getTracks(this.session.channelId)
       .valueChanges()
       .pipe(take(1))
@@ -150,6 +149,10 @@ export class ChannelComponent implements OnInit {
             }
 
             window.setTimeout(() => this.play(), remaining);
+            const posMins = currentPosition / 60000;
+            console.log(`currently playing: ${request.track.name}`);
+            console.log(`at position: ${posMins}`);
+            this.playerService.startPlayer(playlistUri, currentPosition).pipe(take(1)).subscribe();
           }
         });
       });
