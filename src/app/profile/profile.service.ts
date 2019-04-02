@@ -7,6 +7,7 @@ const baseUrl = 'https://api.spotify.com';
 
 const routes = {
     me: () => `/v1/me`,
+    currentlyplaying:  () => '/v1/me/player/currently-playing'
   };
 
 @Injectable()
@@ -20,5 +21,9 @@ export class ProfileService extends HttpService<Profile>{
 
     getMyProfile(){
         return this.getOne(routes.me());
+    }
+
+    getCurrentlyPlaying(){
+        return this.getOne(routes.currentlyplaying());
     }
 }

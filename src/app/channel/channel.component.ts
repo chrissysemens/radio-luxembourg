@@ -6,21 +6,23 @@ import { PlaylistService } from '../playlist/playlist.service';
 import { Request } from '../types/request';
 import { take } from 'rxjs/operators';
 import { PlayerService } from '../player/player.service';
+import { ProfileService } from '../profile/profile.service';
 
 @Component({
   templateUrl: './channel.component.html',
   styleUrls: ['./channel.component.scss'],
-  providers: [QueueService, PlaylistService, PlayerService, SessionService]
+  providers: [QueueService, PlaylistService, PlayerService, ProfileService, SessionService]
 })
 
 export class ChannelComponent implements OnInit {
-
   queue: Array<Request>;
   searchResults: Array<any>;
   session: Session;
+  timer: any;
 
   constructor(private playlistService: PlaylistService, 
               private playerService: PlayerService,
+              private profileService: ProfileService,
               private queueService: QueueService, 
               private sessionService: SessionService) { };
 
@@ -28,14 +30,21 @@ export class ChannelComponent implements OnInit {
      this.session = this.sessionService.getSession();
      this.connectQueue();
      this.stayTuned();
-     this.play(this.session.playlistUri);
+     this.play();
   }
 
+  /**
+   * When a track is searched
+   * @param results 
+   */
   searched(results: Array<any>){
     this.searchResults = results;
   }
   
 
+  /***
+   * Shows the queue in the client
+   */
   connectQueue(){
     this.queueService.connect(this.session.channelId)
       .valueChanges()
@@ -43,11 +52,14 @@ export class ChannelComponent implements OnInit {
         this.queue = requests.filter(request => {
           return request.track_start + request.track.duration_ms > Date.now();
         });
-        console.log(this.queue);
       });
   }
 
-
+   /***
+    * Responsible for listening to tracks added, 
+    * queueing up new ones and removing old ones.
+    * Kicks off playback if not currently playing.
+    */
   stayTuned(){
     let requestsToAdd = new Array<string>();
     let requestsToRemove = new Array<string>();
@@ -68,7 +80,7 @@ export class ChannelComponent implements OnInit {
               if(request.track_start + request.track.duration_ms < Date.now()){
                 requestsToRemove.push(request.track.uri);
               }
-
+              
               if(requestsToRemove.length){
                 this.playlistService.removeTracks(this.session.playlistId, requestsToRemove)
                   .pipe(take(1))
@@ -98,13 +110,22 @@ export class ChannelComponent implements OnInit {
               }
         });
       })
+
+      this.profileService.getCurrentlyPlaying()
+            .pipe(take(1))
+            .subscribe((resp: any) => {
+
+              if(resp.progress_ms <= 0){
+                this.play();
+              }
+            });
     })
   }
 
-  play(playlistUri: string) {
-    const session = this.sessionService.getSession();
+  play() {
+    this.session = this.sessionService.getSession();
 
-    this.queueService.getTracks(session.channelId)
+    this.queueService.getTracks(this.session.channelId)
       .valueChanges()
       .pipe(take(1))
       .subscribe((requests: Array<Request>) => {
@@ -120,10 +141,15 @@ export class ChannelComponent implements OnInit {
 
           if(trackStarted && !trackFinished){
             const currentPosition = Date.now() - request.track_start;
-            const posMins = currentPosition / 60000;
-            console.log(`starting playback of: ${request.track.name}`);
-            console.log(`at position: ${posMins}`);
-            this.playerService.startPlayer(playlistUri, currentPosition).pipe(take(1)).subscribe();
+            const remaining = request.track.duration_ms - currentPosition;
+
+            this.playerService.startPlayer([request.track.uri], currentPosition).pipe(take(1)).subscribe();
+
+            if(this.timer){
+              clearTimeout(this.timer);
+            }
+
+            window.setTimeout(() => this.play(), remaining);
           }
         });
       });
