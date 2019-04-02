@@ -34,7 +34,6 @@ export class QueueService extends FirebaseService<any>{
 
     requestSong(channelId: string, track: Track, userId: string){
         let trackStart = 0;
-        let gap = 0;
 
         this.fs.collection(routes.request(channelId))
         .valueChanges() 
@@ -48,7 +47,7 @@ export class QueueService extends FirebaseService<any>{
 
             if(lastRequest &&
                 (lastRequest.track_start + lastRequest.track.duration_ms) > Date.now()) {
-                    trackStart = (lastRequest.track_start + lastRequest.track.duration_ms) + gap;
+                    trackStart = lastRequest.track_start + lastRequest.track.duration_ms;
             } else {
                 trackStart = Date.now();
             }
