@@ -1,0 +1,17 @@
+<div class="queue-track">
+    <div class="row">
+        <div class="col-4">
+            <div class="track-image">
+                <img src="{{ request.track.imageUrl.url }}">
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="artist">
+                {{ request.track.artist | artists }} 
+            </div>
+            <div class="track">
+                {{ request.track.name }}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+.channel-button{
+    display: flex;
+    width: 300px;
+    height: 300px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    color: #fff;
+    background-color: rgba(#000, 0.03);
+    // box-shadow: 0 3px 3px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    cursor:pointer;
+}

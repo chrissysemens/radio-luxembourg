@@ -1,4 +1,15 @@
+/** Variable overrides **/
 @import "styles-variables";
 
+/** Boostrap Grid **/
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
+
+/** Google Fonts */
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,400,400i,700,700i');
+
+
+html,
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+}

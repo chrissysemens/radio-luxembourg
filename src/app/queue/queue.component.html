@@ -1,5 +1,5 @@
 <ul class="queue">
-    <li *ngFor="let request of queue">
-        {{ request.track.name }}
+    <li *ngFor="let request of queue | slice:1">
+        <app-queue-track [request]='request'></app-queue-track>
     </li>
 </ul>

@@ -19,7 +19,6 @@ export class ChannelButtonComponent implements OnInit {
   ngOnInit(){}
 
   join(channel: Channel){
-
     this.channelSelected.emit(channel.id);
   }
 }

@@ -1,0 +1,23 @@
+.queue-track{
+    padding: 15px;
+
+    .track-image{
+        img{
+            width: 50%;
+        }
+    }
+
+    .artist,
+    .track{
+        display: inline-block;
+        color: #fff;
+    }
+
+    .artist{
+        font-size: 15px;
+    }
+
+    .track{
+        font-size: 14px;
+    }
+}

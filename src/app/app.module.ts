@@ -21,12 +21,14 @@ import { SearchResultsComponent } from './search-results/search-results.componen
 import { SessionService } from './session/session.service';
 import { TokenComponent } from './token/token.component';  
 import { TrackComponent } from './tracks/track.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { ArtistsPipe } from './pipes/artists';
+import { QueueTrackComponent } from './queue/queue-track.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddChannelComponent,
+    ArtistsPipe,
     ChannelComponent,
     ChannelButtonComponent,
     LobbyComponent,
@@ -35,7 +37,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     TrackComponent,
     TokenComponent,
     QueueComponent,
-    WelcomeComponent
+    QueueTrackComponent
   ],
   imports: [
     BrowserModule,
