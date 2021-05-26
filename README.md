@@ -1,8 +1,8 @@
-# RadioLuxembourg [not supported]
+# RadioLuxembourg [Proof of concept]
 
-Angular project for creating shared sessions in Spotify using Firebase and Spotifi SDK and APIs.
+Angular project for creating shared sessions in Spotify using Firebase and Spotify Api.
 
-POC working (no UI). Ceased development after functioanlity released within Spotify.
-Code retained for reference
+Development halted after functioanlity released within Spotify.
+Code retained for reference.
 
 
